@@ -1,0 +1,22 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+//   background: rgb(0,0,0);
+//   background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(41,40,40,1) 0%, rgba(51,48,48,1) 100%);
+  color: #fff;      /* White text by default */
+  font-family: 'Orbitron', sans-serif;
+  height: 100%;
+
+
+/* Add the background image */
+background-image: url('C:/Users/Erudes/Downloads/Free-black-background-wallpaper(1).jpg'); /* Replace with the actual path to your image */
+background-size: 100% 100%; /* This will make the image cover the entire background */
+background-position: center; /* Center the image */
+// background-repeat: no-repeat; /* Prevent the image from repeating */
+}
+
+::ng-deep .mat-toolbar-row {
+    white-space: normal; /* Allow wrapping */
+    height: auto; /* Adjust height if necessary */
+  }

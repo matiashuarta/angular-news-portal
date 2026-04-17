@@ -1,0 +1,23 @@
+# Environment variables — never commit these
+.env
+*.env
+
+# SQLite databases
+*.db
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Angular build output
+responsive-angular-app/dist/
+responsive-angular-app/.angular/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+desktop.ini

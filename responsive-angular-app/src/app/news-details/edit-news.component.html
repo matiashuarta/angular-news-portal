@@ -1,0 +1,41 @@
+<!-- edit-news.component.html -->
+<form #editForm="ngForm" (ngSubmit)="saveChanges()">
+    <div>
+      <label for="title">Title:</label>
+      <input id="title" name="title" [(ngModel)]="newsItem.title" required>
+    </div>
+    <div>
+      <label for="subtitle">Subtitle:</label>
+      <input id="subtitle" name="subtitle" [(ngModel)]="newsItem.subtitle" required>
+    </div>
+    <div>
+      <label for="fullText">Content:</label>
+      <textarea id="fullText" name="fullText" [(ngModel)]="newsItem.fullText" rows="5" required></textarea>
+    </div>
+    <div>
+      <label for="image">Image URL:</label>
+      <input id="image" name="image" [(ngModel)]="newsItem.image" required>
+    </div>
+    <div>
+      <label for="isTopNews">Is Top News:</label>
+      <input type="checkbox" id="isTopNews" name="isTopNews" [(ngModel)]="newsItem.isTopNews">
+    </div>
+    <div>
+      <label for="newsType">News Type:</label>
+      <select id="newsType" name="newsType" [(ngModel)]="newsItem.newsType" required>
+        <option *ngFor="let type of newsTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+    <!-- <-- Cambios: select para category -->
+    <div>
+      <label for="category">Category:</label>
+      <select id="category" name="category" [(ngModel)]="newsItem.category">
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+    <!-- <-- Fin cambios -->
+  
+    <button type="submit" [disabled]="!editForm.form.valid">Save Changes</button>
+    <button type="button" (click)="cancelEdit()">Cancel</button>
+  </form>
+  

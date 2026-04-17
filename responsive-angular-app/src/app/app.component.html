@@ -1,0 +1,34 @@
+<mat-toolbar class="top-toolbar">
+  <div class="toolbar-left">
+    <button mat-icon-button (click)="toggleOverlayMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+      
+  <div class="logo">
+    <img src="assets/transparent.png" alt="Site Logo" />
+  </div>
+  </div>
+
+  <div class="toolbar-center">
+    <!-- <span class="portal-title" (click)="navigateTo('/')">Video Game News Portal</span> -->
+  </div>
+</mat-toolbar>
+
+<div class="menu-overlay" [class.open]="overlayMenuOpen" (click)="closeOverlayMenu($event)">
+  <div class="menu-content" (click)="$event.stopPropagation()">
+    <button mat-button (click)="navigateTo('/')">Home</button>
+    <button mat-button *ngIf="isAdmin" (click)="navigateTo('/admin')">Admin</button>
+    <button mat-button *ngIf="!isLoggedIn" (click)="navigateTo('/login')">Login</button>
+    <button mat-button *ngIf="!isLoggedIn" (click)="navigateTo('/register')">Register</button>
+    <button mat-button *ngIf="isLoggedIn" (click)="navigateTo('/profile')">Profile</button>
+    <button mat-button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
+
+<footer class="footer-container">
+  <p>© 2023 - The Gaming News Portal. All rights reserved.</p>
+</footer>

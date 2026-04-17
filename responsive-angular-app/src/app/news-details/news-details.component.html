@@ -1,0 +1,120 @@
+<section class="news-details">
+    <div class="main-news">
+      <h1 *ngIf="newsItem?.title">{{ newsItem.title }}</h1>
+      <h2 *ngIf="newsItem?.subtitle">{{ newsItem.subtitle }}</h2>
+  
+      <img [src]="newsItem?.image" alt="News Image" class="detail-image" />
+  
+      <div class="full-content" *ngIf="newsItem?.fullText">
+        <p [innerHTML]="fullTextWithBreaks"></p>
+      </div>
+  
+      <!-- Like & Dislike Buttons along with Edit & Delete -->
+      <div class="reaction-buttons">
+        <button (click)="likeNews()" class="like-dislike-btn">👍 Like</button>
+        <span>{{ likeCount }}</span>
+        <button (click)="dislikeNews()" class="like-dislike-btn">👎 Dislike</button>
+        <span>{{ dislikeCount }}</span>
+  
+        <button *ngIf="isAdmin" (click)="editNews(newsItem)" class="like-dislike-btn admin-btn">EDIT</button>
+        <button *ngIf="isAdmin" (click)="deleteNews(newsItem.id)" class="like-dislike-btn admin-btn">DELETE</button>
+      </div>
+  
+      <!-- Social Media Share Buttons -->
+      <div class="share-buttons">
+        <h3>Share</h3>
+        <button (click)="shareOnFacebook()">Facebook</button>
+        <button (click)="shareOnTwitter()">Twitter</button>
+        <button (click)="shareOnLinkedIn()">WhatsApp</button>
+      </div>
+    </div>
+  
+    <!-- Comments Section -->
+    <div class="comments-section">
+      <!-- Toggle Button -->
+<button (click)="toggleComments()" class="comment-toggle-btn">
+    {{ commentsVisible ? 'Hide Comments' : 'View Comments' }}
+  </button>
+  
+  
+      <div *ngIf="commentsVisible">
+        <!-- If not logged in -->
+        <div *ngIf="!isLoggedIn">
+          <p>You must be logged in to view or post comments.</p>
+        </div>
+  
+        <!-- If logged in -->
+        <div *ngIf="isLoggedIn">
+          <!-- Post Comment Form -->
+          <textarea [(ngModel)]="newCommentText" rows="3" placeholder="Type comment"></textarea>
+          <button (click)="postComment()">Add Comment</button>
+  
+          <div class="existing-comments">
+            <div class="comment-item" *ngFor="let c of comments">
+              <!-- Username -->
+              <p><strong>{{ c.username }}</strong></p>
+              <!-- Timestamp -->
+              <p><small>{{ c.timestamp | date: 'short' }}</small></p>
+              <!-- Comment Text -->
+              <p *ngIf="!c.isEditing">{{ c.text }}</p>
+              <textarea *ngIf="c.isEditing" [(ngModel)]="c.editText"></textarea>
+  
+              <!-- Like/Dislike Buttons -->
+              <div class="like-dislike-buttons">
+                <button (click)="likeComment(c.id)">👍</button>
+                <button (click)="dislikeComment(c.id)">👎</button>
+              </div>
+  
+              <!-- Edit/Delete Buttons for User's Own Comments -->
+              <div *ngIf="c.isOwner">
+                <button *ngIf="!c.isEditing" (click)="enableEditComment(c)">Edit</button>
+                <button *ngIf="c.isEditing" (click)="saveEditedComment(c)">Save</button>
+                <button *ngIf="c.isEditing" (click)="cancelEditComment(c)">Cancel</button>
+                <button (click)="deleteComment(c.id)">Delete</button>
+              </div>
+  
+              <!-- Reply Functionality -->
+              <button (click)="toggleReplyBox(c.id)">Reply</button>
+              <div *ngIf="c.replyBoxVisible">
+                <textarea [(ngModel)]="c.newReplyText" rows="2" placeholder="Enter your reply"></textarea>
+                <button (click)="postReply(c.id, c.newReplyText)">Post Reply</button>
+              </div>
+  
+              <!-- Display Replies -->
+              <div class="comment-replies" *ngIf="c.replies?.length">
+                <div class="reply-item" *ngFor="let r of c.replies">
+                  <p>
+                    <strong>{{ r.username }}</strong>
+                    <small>({{ r.timestamp | date: 'short' }})</small>: {{ r.text }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Separator -->
+    <div class="separator"></div>
+  
+    <!-- Related News Section -->
+    <section class="related-news" *ngIf="(relatedNews?.length || 0) > 0">
+      <h3>Related News</h3>
+      <div class="related-news-grid">
+        <div class="news-card" *ngFor="let r of relatedNews">
+          <img [src]="r.image" alt="{{ r.title }}" />
+          <h3>{{ r.title }}</h3>
+          <p>{{ r.subtitle }}</p>
+          <a
+            [routerLink]="['/news', r.id]"
+            [queryParams]="{ isAdmin: isAdmin }"
+            class="read-more"
+          >
+            Read More
+          </a>
+        </div>
+      </div>
+    </section>
+  </section>
+  

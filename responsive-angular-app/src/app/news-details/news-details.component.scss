@@ -1,0 +1,301 @@
+.news-details {
+    padding: 2rem;
+  
+    /* Main News Content */
+    .main-news {
+      max-width: 700px; /* Tighter width */
+      margin: 0 auto; /* Center the content */
+      text-align: center;
+      margin-bottom: 3rem;
+  
+      h1, h2 {
+        font-family: 'Orbitron', sans-serif;
+        color: #ff9800;
+      }
+  
+      .detail-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+  
+      .full-content {
+        margin-top: 1.5rem;
+        text-align: justify; /* Keeps text neat */
+        padding: 0 1rem;
+  
+        p {
+          font-size: 1rem;
+          line-height: 1.6;
+          color: #ccc;
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+  
+    /* Related News Section */
+    .related-news {
+      margin-top: 3rem;
+  
+      h3 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.5rem;
+        color: #ff9800;
+        margin-bottom: 1rem;
+      }
+  
+      .related-news-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+        gap: 0.8rem;
+  
+        @media (max-width: 768px) {
+          grid-template-columns: repeat(2, 1fr); /* 2 items per row on smaller screens */
+        }
+      }
+  
+      .news-card {
+        background-color: #222;
+        border: 1px solid #444;
+        border-radius: 8px;
+        padding: 0.75rem;
+        text-align: center;
+        color: #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  
+        img {
+          width: 100%;
+          height: 100px; /* Smaller height for tiles */
+          object-fit: cover;
+          border-radius: 4px;
+          margin-bottom: 0.5rem;
+        }
+  
+        h3 {
+          margin: 0.3rem 0;
+          color: #fff;
+          font-family: 'Orbitron', sans-serif;
+          font-weight: 700;
+          font-size: 1rem;
+        }
+  
+        p {
+          font-size: 0.75rem;
+          color: #aaa;
+          margin-bottom: 0.5rem;
+        }
+  
+        a {
+          text-decoration: none;
+          font-size: 0.8rem;
+          color: #ff9800;
+        }
+  
+        &:hover {
+          transform: scale(1.05);
+          transition: transform 0.3s ease;
+        }
+      }
+    }
+  }
+  
+  .reaction-buttons {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center; /* Center the buttons */
+  
+    .like-dislike-btn {
+      background-color: #ff9800;
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-family: 'Orbitron', sans-serif;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+  
+      &:hover {
+        background-color: #e68a00;
+      }
+    }
+    
+    .admin-btn {
+      background-color: #4CAF50; // Green color for admin actions
+      color: #000;
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+
+    span {
+      font-size: 1rem;
+      color: #fff;
+    }
+  }
+  
+  .share-buttons {
+    margin-top: 1.5rem;
+    text-align: center;
+  
+    h3 {
+      font-family: 'Orbitron', sans-serif;
+      color: #ff9800;
+      margin-bottom: 1rem;
+    }
+  
+    button {
+      margin: 0.5rem;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      font-family: 'Orbitron', sans-serif;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background-color: #666;
+      }
+    }
+  }
+
+  .comments-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    color: #f1f1f1;
+  
+    .comment-toggle-btn {
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 1rem;
+    }
+  
+    .comment-toggle-btn:hover {
+      background: #e68a00;
+    }
+  
+    textarea {
+      width: 96%;
+      background: #333;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      resize: none;
+      font-size: 1rem;
+    }
+  
+    button {
+      background: #ff9800;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 0.5rem;
+    }
+  
+    button:hover {
+      background: #e68a00;
+    }
+  
+    .existing-comments {
+      margin-top: 1rem;
+  
+      .comment-item {
+        position: relative;
+        padding: 1rem;
+        margin-top: 1rem;
+        background: #2b2b2b;
+        border-radius: 5px;
+  
+        p {
+          margin: 0;
+          line-height: 1.5;
+        }
+  
+        strong {
+          font-size: 1rem;
+          color: #ff9800;
+        }
+  
+        small {
+          color: #888;
+          font-size: 0.8rem;
+        }
+  
+        .like-dislike-buttons {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          display: flex;
+          gap: 5px;
+  
+          button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+  
+            svg {
+              width: 20px;
+              height: 20px;
+              fill: #ff9800;
+              transition: fill 0.3s;
+            }
+  
+            &:hover svg {
+              fill: #e68a00;
+            }
+          }
+        }
+  
+        .comment-replies {
+          margin-top: 1rem;
+          padding-left: 1rem;
+          border-left: 2px solid #ff9800;
+  
+          .reply-item {
+            background: #1a1a1a;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+            border-radius: 5px;
+  
+            strong {
+              color: #76c7c0;
+            }
+  
+            small {
+              color: #aaa;
+            }
+          }
+        }
+      }
+  
+      textarea {
+        margin-top: 1rem;
+      }
+    }
+  
+    .separator {
+      margin: 2rem 0;
+      border-top: 1px solid #444;
+    }
+  }
+  
+  

@@ -1,0 +1,48 @@
+.admin-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    color: #ddd;
+  
+    h2 {
+      text-align: center;
+      color: #ff9800;
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 1rem;
+    }
+  
+    .form-group {
+      margin-bottom: 1rem;
+  
+      label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 600;
+        color: #fff;
+      }
+  
+      input[type="text"], textarea {
+        width: 100%;
+        background: #222;
+        color: #fff;
+        border: 1px solid #444;
+        padding: 0.5rem;
+        border-radius: 4px;
+      }
+    }
+  
+    button {
+      display: block;
+      margin: 1rem auto 0 auto;
+      padding: 0.5rem 1rem;
+      background: #444;
+      color: #fff;
+      border: 1px solid #999;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      &:hover {
+        background: #666;
+      }
+    }
+  }
+  

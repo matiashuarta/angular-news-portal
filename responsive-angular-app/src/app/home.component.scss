@@ -1,0 +1,351 @@
+/* ========================
+   1. Estilos globales y básicos
+   ======================== */
+
+/* General Body Styling */
+body {
+    background: linear-gradient(to bottom, #121212, #1a1a1a, #333);
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  
+ /* Ensure the parent section centers the grid */
+.news-section {
+    max-width: 1200px; /* Restrict the width to ensure centering */
+    margin: 0 auto; /* Center the section */
+    padding: 0 1rem; /* Add some padding for smaller screens */
+    box-sizing: border-box; /* Prevent padding from breaking the layout */
+  }
+
+  h2 {
+    text-align: center; /* Center the title */
+    color: #ff9800; /* Restore the orange color */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    margin-bottom: 1.5rem; /* Adjust spacing if necessary */
+  }
+
+  
+/* Top Toolbar Styling */
+.top-toolbar {
+    background: linear-gradient(90deg, #ff7f50, #ff4500);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    padding: 0 1rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    .logo {
+      display: block; /* Default behavior */
+    }
+  }
+  
+  /* Media Query to hide logo when screen width is less than 420px */
+  @media (max-width: 420px) {
+    .top-toolbar .logo {
+      display: none !important; /* Forcefully hide the logo */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .top-toolbar {
+      padding: 0 0.5rem;
+      height: 50px;
+    }
+  }
+  
+  /* Footer Styling */
+  .footer {
+    background-color: #111;
+    color: #fff;
+    text-align: center;
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  /* ========================
+     2. Top News Grid Adjustments (Modified)
+     ======================== */
+ /* Fix centering issues in the top-news-grid */
+.top-news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px; /* Ensure the grid doesn't stretch beyond this width */
+    margin: 0 auto; /* Center the grid */
+    padding: 1rem;
+  
+    /* Adjust the grid layout for smaller viewports */
+    @media (max-width: 1240px) {
+      grid-template-columns: repeat(2, 1fr); /* Use 2 columns below 1240px */
+    }
+  
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; /* Use 1 column below 768px */
+    }
+  }
+    
+  
+  .news-card.top-news {
+    position: relative;
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    color: #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease;
+  
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      object-fit: cover;
+    }
+  
+    h3 {
+      margin: 0.5rem 0;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+    }
+  
+    p {
+      font-size: 1rem;
+      color: #ccc;
+      margin: 0.5rem 0;
+    }
+  
+    .read-more {
+      font-size: 1rem;
+      color: #ff9800;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+  
+      &:hover {
+        color: #cc7a00;
+      }
+    }
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  
+    @media (max-width: 1150px) {
+      padding: 1rem;
+      h3 {
+        font-size: 1.25rem;
+      }
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      padding: 0.5rem;
+      h3 {
+        font-size: 1rem;
+      }
+      p {
+        font-size: 0.8rem;
+      }
+    }
+  
+    @media (max-width: 480px) {
+      padding: 0.3rem;
+      img {
+        max-height: 150px;
+      }
+      h3 {
+        font-size: 0.9rem;
+      }
+      p {
+        font-size: 0.75rem;
+      }
+      .read-more {
+        font-size: 0.75rem;
+      }
+    }
+  }
+  
+  /* ========================
+     3. Other News Grid (Unchanged)
+     ======================== */
+  .other-news-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    width: 100%;
+    margin: 0;
+    padding: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+  
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #333;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #ff9800;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #cc7a00;
+    }
+  
+    @media (max-width: 480px) {
+      gap: 0.5rem;
+    }
+  }
+  
+  .news-card.other-news {
+    background-color: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    color: #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    height: auto;
+    flex: 0 0 auto;
+    width: 300px;
+  
+    img {
+      width: 100%;
+      height: 150px;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      object-fit: cover;
+    }
+  
+    h3 {
+      font-size: 1rem;
+      color: #fff;
+      margin: 0.5rem 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-height: 2.5rem;
+    }
+  
+    p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin: 0.5rem 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  
+    .read-more {
+      font-size: 0.8rem;
+      color: #ff9800;
+      text-decoration: none;
+      font-weight: bold;
+  
+      &:hover {
+        color: #cc7a00;
+      }
+    }
+  }
+  
+  /* ========================
+     4. Vertical News Grid (Unchanged)
+     ======================== */
+     .vertical-news-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: center;
+        gap: 2rem;
+        max-width: 100%;
+        margin: 0 auto;
+        padding: 1rem;
+      
+        @media (max-width: 768px) and (orientation: landscape) {
+            grid-template-columns: repeat(3, minmax(30%, 1fr));
+            gap: 1rem;
+          }
+        
+          @media (max-width: 480px) and (orientation: landscape) {
+            grid-template-columns: repeat(3, 1fr);
+            overflow-x: auto;
+            gap: 1rem;
+          }
+        
+          @media (max-width: 480px) and (orientation: portrait) {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+          }
+        
+          // Adjusted media query for screens less than 670px
+          @media (max-width: 1064px) {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        
+          // New media query for screens less than 470px
+          @media (max-width: 723px) {
+            grid-template-columns: 1fr;
+          }
+        }
+        
+      
+      .news-card.vertical-news {
+        background-color: #222;
+        border: 1px solid #555;
+        border-radius: 8px;
+        padding: 0.6rem;
+        text-align: center;
+        color: #ddd;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        position: relative;
+        width: 300px; /* Set a smaller width */
+        margin: 0 auto; /* Center individual tiles */
+        font-size: 11px;
+        }
+      
+        img {
+          width: 100%;
+          height: auto;
+          border-radius: 4px;
+          margin-bottom: 1rem;
+          object-fit: cover;
+        }
+      
+
+    
+
+  /* ========================
+     5. Show More Button (Restored)
+     ======================== */
+  .show-more-container {
+     text-align: center;
+     margin-top: 1rem;
+   }
+ 
+   .show-more-btn {
+     background-color: #ff9800;
+     color: #121212;
+     padding: 0.8rem 1.5rem;
+     border: none;
+     border-radius: 5px;
+     font-family: "Orbitron";
+     font-size: 1rem;
+     font-weight: bold;
+     cursor: pointer;
+     transition: background-color 0.3s ease;
+     max-width: 400px;
+   
+     &:hover {
+       background-color: #cc7a00;
+     }
+   }

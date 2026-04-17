@@ -1,0 +1,49 @@
+<div class="admin-container">
+    <h2>{{ isEditMode ? 'Edit News Item' : 'Create a New News Item' }}</h2>
+    <form (ngSubmit)="saveNews()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" [(ngModel)]="title" name="title" required />
+      </div>
+  
+       <!-- Category -->
+    <!-- <-- Cambios: nuevo campo -->
+    <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" [(ngModel)]="category" name="category">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+      <!-- <-- Fin Cambios -->
+      
+      <div class="form-group">
+        <label for="image">Image Path</label>
+        <input type="text" id="image" [(ngModel)]="image" name="image" />
+        <p>(e.g., "assets/newImage.jpg")</p>
+      </div>
+  
+      <div class="form-group">
+        <label for="fullText">Body</label>
+        <textarea id="fullText" [(ngModel)]="fullText" name="fullText" rows="5"></textarea>
+      </div>
+  
+      <div class="form-group">
+        <label for="relatedIds">Related News (IDs, comma-separated)</label>
+        <input type="text" id="relatedIds" [(ngModel)]="relatedIds" name="relatedIds" />
+      </div>
+  
+      <div class="form-group">
+        <label for="isTopNews">Is Top News</label>
+        <input type="checkbox" id="isTopNews" [(ngModel)]="isTopNews" name="isTopNews" />
+      </div>
+
+      <div class="form-group">
+        <label for="newsType">News Type</label>
+        <select id="newsType" [(ngModel)]="newsType" name="newsType" required>
+          <option *ngFor="let type of newsTypes" [value]="type">{{ type }}</option>
+        </select>
+      </div>
+  
+      <button type="submit">{{ isEditMode ? 'Update News' : 'Create News' }}</button>
+    </form>
+  </div>

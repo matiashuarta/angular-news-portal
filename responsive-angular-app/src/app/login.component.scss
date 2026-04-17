@@ -1,0 +1,66 @@
+.form-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #222; /* Dark background for the form */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    text-align: center;
+  
+    h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: #ff9800;
+      margin-bottom: 1rem;
+    }
+  
+    label {
+      display: block;
+      text-align: left;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: #ff9800;
+      margin-bottom: 0.5rem;
+    }
+  
+    input {
+      width: 91%;
+      padding: 1rem; /* Increased padding for better usability */
+      font-size: 1rem;
+      background-color: #333; /* Slightly darker for contrast */
+      border: 1px solid #555; /* Lighter border for visibility */
+      border-radius: 5px;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      outline: none;
+      transition: all 0.3s ease; /* Transition for all properties */
+  
+      /* Added box-shadow for a subtle glow effect on focus */
+      &:focus {
+        border-color: #ff9800;
+        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
+      }
+  
+      /* Placeholder text color */
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  
+    button {
+      width: 40%;
+      padding: 1rem; /* Increased padding for consistency */
+      font-size: 1.2rem;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #ff9800;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+  
+      &:hover {
+        background-color: #e68a00; /* Slightly lighter shade on hover */
+      }
+    }
+  }

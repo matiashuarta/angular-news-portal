@@ -1,0 +1,66 @@
+<section class="news-section">
+    <h2>Latest News</h2>
+    <div class="top-news-grid">
+      <div class="news-card top-news" *ngFor="let item of topNews">
+        <img [src]="item.image" alt="News Image" />
+        <h3>
+          <a
+            [routerLink]="['/news', item.id]"
+            [queryParams]="{ isAdmin: isAdmin }"
+            style="color: #ff9800"
+          >
+            {{ item.title }}
+          </a>
+        </h3>
+        <p>{{ item.subtitle }}</p>
+        <a
+          [routerLink]="['/news', item.id]"
+          [queryParams]="{ isAdmin: isAdmin }"
+          class="read-more"
+        >
+          Read More
+        </a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Other News Section -->
+  <section class="news-section">
+    <h2>More News</h2>
+    <div class="other-news-grid">
+      <div class="news-card other-news" *ngFor="let item of otherNews">
+        <img [src]="item.image" alt="News Image" />
+        <h3>
+          <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" style="color: #ff9800">
+            {{ item.title }}
+          </a>
+        </h3>
+        <p>{{ item.subtitle }}</p>
+        <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" class="read-more">Read More</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Vertical News Section -->
+<section class="news-section">
+    <h2>Past News</h2>
+    <div class="vertical-news-grid">
+      <div class="news-card vertical-news" *ngFor="let item of displayedVerticalNews">
+        <img [src]="item.image" alt="News Image" />
+        <h3>
+          <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" style="color: #ff9800">
+            {{ item.title }}
+          </a>
+        </h3>
+        <p>{{ item.subtitle }}</p>
+        <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" class="read-more">Read More</a>
+      </div>
+    </div>
+  
+    <!-- Show More Button -->
+    <div class="show-more-container" *ngIf="verticalNews.length > displayedVerticalNews.length">
+      <button (click)="loadMoreNews()" class="show-more-btn">Show More</button>
+    </div>
+  </section>
+  
+  
