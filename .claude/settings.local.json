@@ -6,7 +6,8 @@
       "Read(//c/Users/Erudes/.claude/projects/c--Users-Erudes-Desktop-news_portal/**)",
       "Read(//c/Users/Erudes/.claude/projects/c--Users-Erudes-Desktop-news_portal/memory/**)",
       "Bash(sqlite3 /c/Users/Erudes/Desktop/news_portal/backend/news_portal.db \".schema\")",
-      "Bash(sqlite3 /c/Users/Erudes/Desktop/news_portal/backend/news_portal.db \"SELECT sql FROM sqlite_master WHERE type='table';\")"
+      "Bash(sqlite3 /c/Users/Erudes/Desktop/news_portal/backend/news_portal.db \"SELECT sql FROM sqlite_master WHERE type='table';\")",
+      "Bash(ipconfig)"
     ]
   }
 }
