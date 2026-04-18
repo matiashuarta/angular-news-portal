@@ -1,34 +1,166 @@
-<mat-toolbar class="top-toolbar">
-  <div class="toolbar-left">
-    <button mat-icon-button (click)="toggleOverlayMenu()">
-      <mat-icon>menu</mat-icon>
+<header class="navbar">
+  <div class="navbar-inner">
+
+    <!-- Left: logo (inline so Orbitron font renders correctly) -->
+    <a class="navbar-logo" routerLink="/" (click)="goHome()">
+      <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" fill="none">
+        <defs>
+          <radialGradient id="btnA" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#ffcc60"/>
+            <stop offset="100%" stop-color="#e65c00"/>
+          </radialGradient>
+        </defs>
+        <!-- body -->
+        <rect x="3" y="13" width="40" height="22" rx="11" fill="#150800" stroke="#ff9800" stroke-width="1.4"/>
+        <!-- shoulder bumpers -->
+        <path d="M10 13 Q14 8 20 8 L26 8 Q32 8 36 13" stroke="#ff9800" stroke-width="1.2" fill="none" opacity="0.5"/>
+        <!-- d-pad horizontal -->
+        <rect x="9" y="21.5" width="10" height="3" rx="1.5" fill="#ff9800" opacity="0.85"/>
+        <!-- d-pad vertical -->
+        <rect x="12.5" y="18" width="3" height="10" rx="1.5" fill="#ff9800" opacity="0.85"/>
+        <!-- face buttons -->
+        <circle cx="31" cy="19" r="2.2" fill="url(#btnA)" opacity="0.9"/>
+        <circle cx="35.5" cy="23" r="2.2" fill="#e65c00" opacity="0.9"/>
+        <circle cx="31" cy="27" r="2.2" fill="url(#btnA)" opacity="0.9"/>
+        <circle cx="26.5" cy="23" r="2.2" fill="#ffcc60" opacity="0.9"/>
+        <!-- center / start -->
+        <rect x="20" y="21.5" width="6" height="3" rx="1.5" fill="#ff9800" opacity="0.35"/>
+        <!-- analog sticks base -->
+        <ellipse cx="15" cy="31" rx="4" ry="1.8" fill="rgba(255,152,0,0.15)"/>
+        <ellipse cx="31" cy="31" rx="4" ry="1.8" fill="rgba(255,152,0,0.15)"/>
+      </svg>
+      <div class="logo-text">
+        <span class="logo-primary">GAME</span>
+        <span class="logo-secondary">NEWS PORTAL</span>
+      </div>
+    </a>
+
+    <!-- Center: desktop nav links -->
+    <nav class="navbar-links">
+      <a routerLink="/forum" routerLinkActive="active">Forum</a>
+      <a *ngIf="isAdmin" routerLink="/admin" routerLinkActive="active">Admin</a>
+      <ng-container *ngIf="!isLoggedIn">
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+        <a routerLink="/register" routerLinkActive="active" class="nav-cta">Register</a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <a class="navbar-user" routerLink="/profile">
+          <span class="nav-avatar"
+                [style.background]="currentAvatar.bg"
+                [style.border-color]="currentAvatar.border"
+                [style.box-shadow]="'0 0 8px ' + currentAvatar.border + '88'">
+            <mat-icon [style.color]="currentAvatar.border">{{ currentAvatar.icon }}</mat-icon>
+          </span>
+          {{ loggedInUser }}
+        </a>
+        <button class="nav-logout" (click)="logout()">Logout</button>
+      </ng-container>
+    </nav>
+
+    <!-- Right: mobile hamburger -->
+    <button class="hamburger" (click)="toggleOverlayMenu()" aria-label="Open menu">
+      <span></span><span></span><span></span>
     </button>
-      
-  <div class="logo">
-    <img src="assets/transparent.png" alt="Site Logo" />
-  </div>
-  </div>
 
-  <div class="toolbar-center">
-    <!-- <span class="portal-title" (click)="navigateTo('/')">Video Game News Portal</span> -->
   </div>
-</mat-toolbar>
+</header>
 
-<div class="menu-overlay" [class.open]="overlayMenuOpen" (click)="closeOverlayMenu($event)">
-  <div class="menu-content" (click)="$event.stopPropagation()">
-    <button mat-button (click)="navigateTo('/')">Home</button>
-    <button mat-button *ngIf="isAdmin" (click)="navigateTo('/admin')">Admin</button>
-    <button mat-button *ngIf="!isLoggedIn" (click)="navigateTo('/login')">Login</button>
-    <button mat-button *ngIf="!isLoggedIn" (click)="navigateTo('/register')">Register</button>
-    <button mat-button *ngIf="isLoggedIn" (click)="navigateTo('/profile')">Profile</button>
-    <button mat-button *ngIf="isLoggedIn" (click)="logout()">Logout</button>
-  </div>
+<!-- Mobile slide-in drawer -->
+<div class="drawer-overlay" [class.open]="overlayMenuOpen" (click)="closeOverlayMenu($event)">
+  <nav class="drawer" (click)="$event.stopPropagation()">
+    <div class="drawer-header">
+      <div class="drawer-logo-wrap">
+        <svg class="drawer-logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" fill="none">
+          <defs>
+            <radialGradient id="btnB" cx="50%" cy="30%" r="60%">
+              <stop offset="0%" stop-color="#ffcc60"/>
+              <stop offset="100%" stop-color="#e65c00"/>
+            </radialGradient>
+          </defs>
+          <rect x="3" y="13" width="40" height="22" rx="11" fill="#150800" stroke="#ff9800" stroke-width="1.4"/>
+          <path d="M10 13 Q14 8 20 8 L26 8 Q32 8 36 13" stroke="#ff9800" stroke-width="1.2" fill="none" opacity="0.5"/>
+          <rect x="9" y="21.5" width="10" height="3" rx="1.5" fill="#ff9800" opacity="0.85"/>
+          <rect x="12.5" y="18" width="3" height="10" rx="1.5" fill="#ff9800" opacity="0.85"/>
+          <circle cx="31" cy="19" r="2.2" fill="url(#btnB)" opacity="0.9"/>
+          <circle cx="35.5" cy="23" r="2.2" fill="#e65c00" opacity="0.9"/>
+          <circle cx="31" cy="27" r="2.2" fill="url(#btnB)" opacity="0.9"/>
+          <circle cx="26.5" cy="23" r="2.2" fill="#ffcc60" opacity="0.9"/>
+          <rect x="20" y="21.5" width="6" height="3" rx="1.5" fill="#ff9800" opacity="0.35"/>
+        </svg>
+        <div class="drawer-logo-text">
+          <span class="dlp">GAME</span>
+          <span class="dls">NEWS PORTAL</span>
+        </div>
+      </div>
+      <button class="drawer-close" (click)="toggleOverlayMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="drawer-user" *ngIf="isLoggedIn" (click)="navigateTo('/profile')" style="cursor:pointer">
+      <span class="drawer-avatar"
+            [style.background]="currentAvatar.bg"
+            [style.border-color]="currentAvatar.border"
+            [style.box-shadow]="'0 0 6px ' + currentAvatar.border + '66'">
+        <mat-icon [style.color]="currentAvatar.border">{{ currentAvatar.icon }}</mat-icon>
+      </span>
+      <div class="drawer-user-info">
+        <span class="drawer-username">{{ loggedInUser }}</span>
+        <span class="drawer-edit-hint">Edit Profile</span>
+      </div>
+    </div>
+
+    <div class="drawer-links">
+      <a (click)="navigateTo('/forum')"><mat-icon>forum</mat-icon> Forum</a>
+      <a *ngIf="isAdmin" (click)="navigateTo('/admin')"><mat-icon>admin_panel_settings</mat-icon> Admin</a>
+      <a *ngIf="!isLoggedIn" (click)="navigateTo('/login')"><mat-icon>login</mat-icon> Login</a>
+      <a *ngIf="!isLoggedIn" (click)="navigateTo('/register')"><mat-icon>person_add</mat-icon> Register</a>
+      <a *ngIf="isLoggedIn" (click)="logout()" class="drawer-logout"><mat-icon>logout</mat-icon> Logout</a>
+    </div>
+
+    <div class="drawer-categories">
+      <p class="drawer-cat-label">Categories</p>
+      <a (click)="navigateTo('/', 'All')" [class.active]="drawerCategory === 'All'"><mat-icon>apps</mat-icon> All</a>
+      <a (click)="navigateTo('/', 'Multi')" [class.active]="drawerCategory === 'Multi'"><mat-icon>public</mat-icon> Multi</a>
+      <a (click)="navigateTo('/', 'PC')" [class.active]="drawerCategory === 'PC'"><mat-icon>desktop_windows</mat-icon> PC</a>
+      <a (click)="navigateTo('/', 'Xbox')" [class.active]="drawerCategory === 'Xbox'"><mat-icon>sports_esports</mat-icon> Xbox</a>
+      <a (click)="navigateTo('/', 'Playstation')" [class.active]="drawerCategory === 'Playstation'"><mat-icon>videogame_asset</mat-icon> Playstation</a>
+      <a (click)="navigateTo('/', 'Nintendo')" [class.active]="drawerCategory === 'Nintendo'"><mat-icon>gamepad</mat-icon> Nintendo</a>
+      <a (click)="navigateTo('/', 'Mobile')" [class.active]="drawerCategory === 'Mobile'"><mat-icon>smartphone</mat-icon> Mobile</a>
+      <a (click)="navigateTo('/', 'Esports')" [class.active]="drawerCategory === 'Esports'"><mat-icon>emoji_events</mat-icon> Esports</a>
+    </div>
+  </nav>
 </div>
 
-<div class="content">
+<div class="page-content">
   <router-outlet></router-outlet>
 </div>
 
 <footer class="footer-container">
-  <p>© 2023 - The Gaming News Portal. All rights reserved.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <svg class="footer-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 46" fill="none">
+        <defs>
+          <radialGradient id="btnC" cx="50%" cy="30%" r="60%">
+            <stop offset="0%" stop-color="#ffcc60"/>
+            <stop offset="100%" stop-color="#e65c00"/>
+          </radialGradient>
+        </defs>
+        <rect x="3" y="13" width="40" height="22" rx="11" fill="#150800" stroke="#ff9800" stroke-width="1.4"/>
+        <path d="M10 13 Q14 8 20 8 L26 8 Q32 8 36 13" stroke="#ff9800" stroke-width="1.2" fill="none" opacity="0.5"/>
+        <rect x="9" y="21.5" width="10" height="3" rx="1.5" fill="#ff9800" opacity="0.85"/>
+        <rect x="12.5" y="18" width="3" height="10" rx="1.5" fill="#ff9800" opacity="0.85"/>
+        <circle cx="31" cy="19" r="2.2" fill="url(#btnC)" opacity="0.9"/>
+        <circle cx="35.5" cy="23" r="2.2" fill="#e65c00" opacity="0.9"/>
+        <circle cx="31" cy="27" r="2.2" fill="url(#btnC)" opacity="0.9"/>
+        <circle cx="26.5" cy="23" r="2.2" fill="#ffcc60" opacity="0.9"/>
+        <rect x="20" y="21.5" width="6" height="3" rx="1.5" fill="#ff9800" opacity="0.35"/>
+      </svg>
+      <div class="footer-logo-text">
+        <span class="flp">GAME NEWS PORTAL</span>
+        <span class="fls">Your source for gaming news &amp; updates</span>
+      </div>
+    </div>
+    <p class="footer-copy">© 2025 Game News Portal. All rights reserved.</p>
+  </div>
 </footer>

@@ -1,0 +1,58 @@
+<div class="profile-page">
+  <div class="profile-card">
+
+    <h2 class="profile-title">Edit Profile</h2>
+
+    <!-- Current avatar display -->
+    <div class="current-avatar"
+         [style.background]="getAvatar(selectedAvatar).bg"
+         [style.border-color]="getAvatar(selectedAvatar).border"
+         [style.box-shadow]="'0 0 24px ' + getAvatar(selectedAvatar).border + '55'">
+      <mat-icon [style.color]="getAvatar(selectedAvatar).border">
+        {{ getAvatar(selectedAvatar).icon }}
+      </mat-icon>
+    </div>
+    <p class="avatar-label">{{ getAvatar(selectedAvatar).label }}</p>
+    <p class="user-name">{{ username }}</p>
+
+    <!-- Avatar picker -->
+    <div class="section-label">Choose Avatar</div>
+    <div class="avatar-grid">
+      <button
+        *ngFor="let av of avatars"
+        class="avatar-option"
+        [class.selected]="selectedAvatar === av.id"
+        [style.background]="av.bg"
+        [style.border-color]="selectedAvatar === av.id ? av.border : '#2a2000'"
+        [style.box-shadow]="selectedAvatar === av.id ? ('0 0 14px ' + av.border + '88') : 'none'"
+        (click)="selectAvatar(av.id)"
+        [title]="av.label">
+        <mat-icon [style.color]="av.border">{{ av.icon }}</mat-icon>
+        <span class="av-label">{{ av.label }}</span>
+      </button>
+    </div>
+
+    <!-- Password change -->
+    <div class="section-label" style="margin-top:2rem">Change Password <span class="optional">(optional)</span></div>
+    <div class="field-group">
+      <label>New Password</label>
+      <input type="password" [(ngModel)]="newPassword" placeholder="Leave blank to keep current" />
+    </div>
+    <div class="field-group">
+      <label>Confirm Password</label>
+      <input type="password" [(ngModel)]="confirmPassword" placeholder="Repeat new password" />
+    </div>
+
+    <!-- Message -->
+    <p class="save-message" *ngIf="message" [class.error]="messageType === 'error'">{{ message }}</p>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn-cancel" (click)="router.navigate(['/'])">Cancel</button>
+      <button class="btn-save" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving…' : 'Save Changes' }}
+      </button>
+    </div>
+
+  </div>
+</div>

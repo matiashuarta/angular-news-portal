@@ -25,14 +25,14 @@ export class AdminComponent implements OnInit {
   newsType: string = 'Other News';
 
   // <-- Cambios: nueva propiedad
-  categories: string[] = ['Multi', 'PC', 'Xbox', 'Playstation', 'Nintendo'];
+  categories: string[] = ['Multi', 'PC', 'Xbox', 'Playstation', 'Nintendo', 'Mobile', 'Esports'];
   category: string = 'Multi';
   // <-- Fin Cambios
 
   constructor(
     private newsService: NewsService,
     private router: Router,
-    private route: ActivatedRoute
+    _route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -72,27 +72,27 @@ export class AdminComponent implements OnInit {
     // <-- Fin Cambios
 
     if (this.isEditMode) {
-      this.newsService.updateNews(this.newsId, payload).subscribe(
-        () => {
+      this.newsService.updateNews(this.newsId, payload).subscribe({
+        next: () => {
           alert('News updated successfully');
           this.router.navigate(['/']);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error updating news:', error);
           alert('Error updating news: ' + (error.error.message || 'Unknown error'));
         }
-      );
+      });
     } else {
-      this.newsService.createNews(payload).subscribe(
-        () => {
+      this.newsService.createNews(payload).subscribe({
+        next: () => {
           alert('News created successfully');
           this.router.navigate(['/']);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error creating news:', error);
           alert('Error creating news: ' + (error.error.message || 'Unknown error'));
         }
-      );
+      });
     }
   }
 }

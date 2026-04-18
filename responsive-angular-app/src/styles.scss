@@ -1,22 +1,24 @@
-html,
-body {
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600&display=swap');
+
+html, body {
   margin: 0;
   padding: 0;
-//   background: rgb(0,0,0);
-//   background: linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(41,40,40,1) 0%, rgba(51,48,48,1) 100%);
-  color: #fff;      /* White text by default */
-  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif;
   height: 100%;
+  background-color: #111009;
+}
 
-
-/* Add the background image */
-background-image: url('assets/background.jpg');
-background-size: 100% 100%; /* This will make the image cover the entire background */
-background-position: center; /* Center the image */
-// background-repeat: no-repeat; /* Prevent the image from repeating */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 ::ng-deep .mat-toolbar-row {
-    white-space: normal; /* Allow wrapping */
-    height: auto; /* Adjust height if necessary */
-  }
+  white-space: normal;
+  height: auto;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #ff9800; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #ffb74d; }

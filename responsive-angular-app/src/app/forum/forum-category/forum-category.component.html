@@ -1,0 +1,99 @@
+<app-category-bar [selected]="currentCategory" (categorySelect)="goToCategory($event)"></app-category-bar>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a routerLink="/forum"><mat-icon>forum</mat-icon> Forum</a>
+  <mat-icon class="bc-sep">chevron_right</mat-icon>
+  <span>{{ category?.name || slug }}</span>
+</div>
+
+<!-- Category hero -->
+<div class="cat-hero" *ngIf="category" [style.border-bottom-color]="category.color + '55'">
+  <div class="cat-hero-inner">
+    <div class="cat-hero-icon" [style.background]="category.color + '22'">{{ category.icon }}</div>
+    <div class="cat-hero-text">
+      <h1>{{ category.name }}</h1>
+      <p>{{ category.description }}</p>
+      <span class="cat-hero-stats">
+        <strong>{{ total }}</strong> topics
+      </span>
+    </div>
+    <button class="btn-new-topic" (click)="openNewTopic()">
+      <mat-icon>edit</mat-icon> New Topic
+    </button>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="cat-layout">
+  <div class="topics-toolbar">
+    <div class="sort-pills">
+      <button class="sort-pill" [class.active]="sort === 'latest'"  (click)="applySort('latest')">Latest</button>
+      <button class="sort-pill" [class.active]="sort === 'popular'" (click)="applySort('popular')">Popular</button>
+    </div>
+    <span class="topic-count-label">{{ total }} topics</span>
+  </div>
+
+  <!-- Topics list -->
+  <div *ngIf="loading" class="loading-msg">Loading topics…</div>
+
+  <div *ngIf="!loading && !topics.length" class="no-topics-msg">
+    <mat-icon>forum</mat-icon>
+    <p>No topics yet in this category.</p>
+    <button class="btn-new-topic" (click)="openNewTopic()"><mat-icon>edit</mat-icon> Start one</button>
+  </div>
+
+  <div class="topic-list" *ngIf="!loading && topics.length">
+    <a class="topic-row" *ngFor="let t of topics" [routerLink]="['/forum/topic', t.id]">
+      <div class="topic-row-left">
+        <mat-icon class="pin-icon" *ngIf="t.pinned">push_pin</mat-icon>
+        <mat-icon class="lock-icon" *ngIf="t.locked">lock</mat-icon>
+        <div class="topic-title-wrap">
+          <span class="topic-title">{{ t.title }}</span>
+          <span class="topic-author">by <strong>{{ t.username }}</strong> · {{ timeAgo(t.created_at) }}</span>
+        </div>
+      </div>
+      <div class="topic-row-right">
+        <span class="topic-stat">
+          <mat-icon>chat_bubble_outline</mat-icon>{{ t.post_count }}
+        </span>
+        <span class="topic-stat">
+          <mat-icon>visibility</mat-icon>{{ t.view_count }}
+        </span>
+        <span class="topic-last">{{ timeAgo(t.last_post_at) }}</span>
+        <button *ngIf="isAdmin" class="del-btn" (click)="deleteTopic(t.id); $event.preventDefault(); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </a>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="totalPages > 1">
+    <button (click)="prevPage()" [disabled]="page === 1"><mat-icon>chevron_left</mat-icon></button>
+    <span>{{ page }} / {{ totalPages }}</span>
+    <button (click)="nextPage()" [disabled]="page === totalPages"><mat-icon>chevron_right</mat-icon></button>
+  </div>
+</div>
+
+<!-- New Topic Modal -->
+<div class="modal-overlay" [class.open]="showNewTopic" (click)="closeNewTopic()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h2><mat-icon>edit</mat-icon> New Topic in {{ category?.name }}</h2>
+    <div class="modal-field">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="newTitle" placeholder="What's your topic about?" maxlength="200" />
+    </div>
+    <div class="modal-field">
+      <label>Your Post</label>
+      <textarea [(ngModel)]="newBody" placeholder="Share your thoughts…" rows="5" maxlength="5000"></textarea>
+    </div>
+    <p class="modal-error" *ngIf="newTopicError">{{ newTopicError }}</p>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeNewTopic()">Cancel</button>
+      <button class="btn-submit" [disabled]="submitting" (click)="submitTopic()">
+        {{ submitting ? 'Posting…' : 'Post Topic' }}
+      </button>
+    </div>
+  </div>
+</div>

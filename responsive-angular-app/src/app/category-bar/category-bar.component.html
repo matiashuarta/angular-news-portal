@@ -1,0 +1,10 @@
+<div class="category-bar">
+  <button
+    *ngFor="let cat of categories"
+    class="cat-btn"
+    [class.active]="selected === cat.id"
+    (click)="select(cat.id)">
+    <mat-icon>{{ cat.icon }}</mat-icon>
+    {{ cat.label }}
+  </button>
+</div>
