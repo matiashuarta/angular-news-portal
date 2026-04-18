@@ -117,6 +117,20 @@ db.serialize(() => {
       CONSTRAINT unique_comment_vote UNIQUE (commentId, userId)
     )
   `);
+
+  // Ensure the default admin account exists with the well-known seed password.
+  // Anyone who clones the repo gets a working admin login immediately after
+  // running the server. Change this password via the profile page after first login.
+  const SEED_ADMIN = { username: 'admin', password: 'Admin1234!' };
+  bcrypt.hash(SEED_ADMIN.password, 10, (err, hash) => {
+    if (err) return;
+    db.run(
+      `INSERT INTO admins (username, password, isAdmin) VALUES (?, ?, 1)
+       ON CONFLICT(username) DO UPDATE SET password = excluded.password`,
+      [SEED_ADMIN.username, hash],
+      () => console.log(`Admin account ready — username: ${SEED_ADMIN.username}`)
+    );
+  });
 });
 // <-- Fin Cambios
 

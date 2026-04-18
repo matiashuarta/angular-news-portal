@@ -1,48 +1,251 @@
 .admin-container {
-    max-width: 600px;
-    margin: 2rem auto;
-    color: #ddd;
-  
-    h2 {
-      text-align: center;
-      color: #ff9800;
-      font-family: 'Orbitron', sans-serif;
-      margin-bottom: 1rem;
-    }
-  
-    .form-group {
-      margin-bottom: 1rem;
-  
-      label {
-        display: block;
-        margin-bottom: 0.25rem;
-        font-weight: 600;
-        color: #fff;
-      }
-  
-      input[type="text"], textarea {
-        width: 100%;
-        background: #222;
-        color: #fff;
-        border: 1px solid #444;
-        padding: 0.5rem;
-        border-radius: 4px;
-      }
-    }
-  
-    button {
-      display: block;
-      margin: 1rem auto 0 auto;
-      padding: 0.5rem 1rem;
-      background: #444;
-      color: #fff;
-      border: 1px solid #999;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Orbitron', sans-serif;
-      &:hover {
-        background: #666;
-      }
-    }
+  max-width: 750px;
+  margin: 2rem auto;
+  color: #ddd;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ff9800;
+  margin: 0 0 1.5rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+// ── Shared field styles ───────────────────────────────────────────────────────
+%field {
+  background: #0a0700;
+  color: #ddd;
+  border: 1px solid #2a2000;
+  padding: .75rem 1rem;
+  border-radius: 6px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.15rem;
+  outline: none;
+  transition: border-color .2s;
+  width: 100%;
+  box-sizing: border-box;
+
+  &:focus { border-color: #ff9800; }
+
+  option { background: #150e00; color: #ddd; }
+}
+
+// ── Form card ─────────────────────────────────────────────────────────────────
+.form-card {
+  background: #100b00;
+  border: 1px solid #2a2000;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+
+  label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: .8rem;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: .08em;
+    text-transform: uppercase;
   }
-  
+
+  .hint { font-family: 'Rajdhani', sans-serif; font-size: .95rem; color: #555; font-weight: 400; text-transform: none; letter-spacing: 0; }
+
+  input[type="text"], textarea, select { @extend %field; }
+  select { cursor: pointer; }
+  textarea { resize: vertical; line-height: 1.6; }
+}
+
+.form-group--inline {
+  flex-direction: row;
+  align-items: center;
+
+  label {
+    display: flex; align-items: center; gap: .5rem;
+    text-transform: none; font-size: 1rem; cursor: pointer;
+  }
+
+  input[type="checkbox"] { width: auto; cursor: pointer; accent-color: #ff9800; }
+}
+
+.form-actions { display: flex; gap: .75rem; margin-top: .25rem; }
+
+.btn-save {
+  padding: .7rem 1.8rem;
+  background: linear-gradient(135deg, #ff9800, #e65c00);
+  border: none; border-radius: 7px;
+  color: #000; font-family: 'Orbitron', sans-serif;
+  font-size: .9rem; font-weight: 800; cursor: pointer; transition: opacity .2s;
+  &:hover { opacity: .85; }
+}
+
+.btn-cancel {
+  padding: .7rem 1.4rem;
+  background: none; border: 1px solid #3a2800; border-radius: 7px;
+  color: #777; font-family: 'Orbitron', sans-serif;
+  font-size: .9rem; font-weight: 700; cursor: pointer; transition: all .2s;
+  &:hover { border-color: #888; color: #ccc; }
+}
+
+// ── Article list ──────────────────────────────────────────────────────────────
+.article-list {
+  background: #100b00;
+  border: 1px solid #2a2000;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.list-controls {
+  display: flex;
+  gap: .6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+
+  @media (max-width: 600px) { flex-direction: column; }
+}
+
+.search-input {
+  @extend %field;
+  flex: 1;
+  min-width: 150px;
+  font-size: 1rem;
+}
+
+.ctrl-select {
+  @extend %field;
+  width: auto;
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.list-status {
+  color: #555; font-size: .85rem; text-align: center; padding: 1rem 0;
+}
+
+.article-row {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid #1a1200;
+
+  &:last-child { border-bottom: none; }
+}
+
+.article-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+
+.article-title {
+  font-size: 1.15rem;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.article-meta {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .8rem;
+  color: #555;
+  letter-spacing: .04em;
+}
+
+.article-actions { display: flex; gap: .4rem; flex-shrink: 0; }
+
+.btn-edit {
+  padding: .45rem 1.1rem;
+  background: none; border: 1px solid #2a2000; border-radius: 5px;
+  color: #ff9800; font-family: 'Orbitron', sans-serif;
+  font-size: .78rem; font-weight: 700; cursor: pointer; transition: all .2s;
+  &:hover { background: rgba(255,152,0,.1); border-color: #ff9800; }
+}
+
+.btn-delete {
+  padding: .45rem 1.1rem;
+  background: none; border: 1px solid #2a2000; border-radius: 5px;
+  color: #666; font-family: 'Orbitron', sans-serif;
+  font-size: .78rem; font-weight: 700; cursor: pointer; transition: all .2s;
+  &:hover { border-color: #ef4444; color: #ef4444; }
+}
+
+// ── Related picker ────────────────────────────────────────────────────────────
+.related-picker {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #2a2000;
+  border-radius: 6px;
+  background: #0a0700;
+}
+
+.related-option {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  padding: .65rem .9rem;
+  cursor: pointer;
+  transition: background .15s;
+  border-bottom: 1px solid #1a1000;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(255,152,0,.06); }
+  &.selected { background: rgba(255,152,0,.1); }
+}
+
+.related-check {
+  font-size: 1.1rem;
+  color: #ff9800;
+  width: 1.2rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.related-label {
+  flex: 1;
+  font-size: 1.05rem;
+  color: #ccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-cat {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .75rem;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn-load-more {
+  padding: .45rem 1.2rem;
+  background: none;
+  border: 1px solid #2a2000; border-radius: 6px;
+  color: #888; font-family: 'Orbitron', sans-serif;
+  font-size: .65rem; font-weight: 700; cursor: pointer; transition: all .2s;
+  &:hover { border-color: #ff9800; color: #ff9800; }
+}

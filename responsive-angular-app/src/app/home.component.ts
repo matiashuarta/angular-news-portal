@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { CategoryService } from './category.service';
 import { CommonModule } from '@angular/common';
@@ -39,12 +39,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   userName: string = '';
   private readonly maxTiles = 3;
   mobileOtherLimit = 6;
+  desktopOtherLimit = 8;
 
   allNewsRaw: any[] = [];
   categories = ['All', 'Multi', 'PC', 'Xbox', 'Playstation', 'Nintendo', 'Mobile', 'Esports'];
   selectedCategory = localStorage.getItem('selectedCategory') ?? 'All';
-
-  @ViewChild('carousel') carouselRef!: ElementRef<HTMLElement>;
 
   constructor(
     private newsService: NewsService,
@@ -52,11 +51,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private categoryService: CategoryService
   ) {}
 
-  scrollCarousel(dir: number) {
-    this.carouselRef?.nativeElement.scrollBy({ left: dir * 300, behavior: 'smooth' });
-  }
-
-  ngOnInit() {
+ngOnInit() {
     this.checkAdminStatus();
     this.newsService.getAllNews().subscribe((news) => {
       this.allNewsRaw = news;
@@ -77,6 +72,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   private applyFilters() {
+    this.mobileOtherLimit = 6;
+    this.desktopOtherLimit = 8;
     const news = this.selectedCategory === 'All'
       ? this.allNewsRaw
       : this.allNewsRaw.filter((n: any) => n.category === this.selectedCategory);
@@ -138,8 +135,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   get mobileOtherNews() { return this.otherNews.slice(0, this.mobileOtherLimit); }
+  get desktopOtherNews() { return this.otherNews.slice(0, this.desktopOtherLimit); }
 
   loadMoreMobileOther() { this.mobileOtherLimit += 6; }
+  loadMoreDesktopOther() { this.desktopOtherLimit += 8; }
 
   loadMoreNews() {
     const nextIndex = this.displayedVerticalNews.length + this.maxTiles;
