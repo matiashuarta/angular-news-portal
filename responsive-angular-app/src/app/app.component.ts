@@ -6,7 +6,9 @@ import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { AuthService } from './news-details/auth.service'; // Ensure the path is correct
+import { AuthService } from './news-details/auth.service';
+import { AvatarService } from './avatar.service';
+import { CategoryService } from './category.service';
 
 @Component({
   standalone: true,
@@ -23,24 +25,28 @@ import { AuthService } from './news-details/auth.service'; // Ensure the path is
 })
 export class AppComponent implements OnInit {
   overlayMenuOpen = false;
+  private scrollY = 0;
   loggedInUser: string | null = null;
-  isAdmin: boolean = false;
-  isLoggedIn: boolean = false;
+  isAdmin = false;
+  isLoggedIn = false;
+  drawerCategory: string = localStorage.getItem('selectedCategory') ?? 'All';
 
   constructor(
     private router: Router,
     private authService: AuthService,
-    @Inject(PLATFORM_ID) private platformId: Object // Inject PLATFORM_ID here
+    public avatarService: AvatarService,
+    private categoryService: CategoryService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
   ngOnInit() {
     this.checkLoginStatus();
   }
 
-  /**
-   * Checks the user's login status by verifying the JWT token.
-   * This function runs only in the browser environment.
-   */
+  get currentAvatar() {
+    return this.avatarService.find(this.avatarService.get());
+  }
+
   checkLoginStatus() {
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('token');
@@ -50,9 +56,8 @@ export class AppComponent implements OnInit {
           this.isLoggedIn = true;
           this.loggedInUser = payload.username || 'User';
           this.isAdmin = payload.isAdmin || false;
-          this.authService.setAdminStatus(this.isAdmin); // Update AuthService
-        } catch (error) {
-          console.error('Error parsing token payload:', error);
+          this.authService.setAdminStatus(this.isAdmin);
+        } catch {
           this.isLoggedIn = false;
           this.loggedInUser = null;
           this.isAdmin = false;
@@ -67,44 +72,57 @@ export class AppComponent implements OnInit {
     }
   }
 
-  /**
-   * Logs out the user by removing the JWT token and resetting state.
-   */
   logout() {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
     }
+    this.avatarService.clear();
     this.isLoggedIn = false;
     this.loggedInUser = null;
     this.isAdmin = false;
-    this.authService.setAdminStatus(false); // Update AuthService
+    this.authService.setAdminStatus(false);
     this.router.navigate(['/']);
   }
 
-  /**
-   * Toggles the visibility of the overlay menu.
-   */
   toggleOverlayMenu() {
     this.overlayMenuOpen = !this.overlayMenuOpen;
-  }
-
-  /**
-   * Closes the overlay menu when clicking outside the menu content.
-   * @param event - The click event
-   */
-  closeOverlayMenu(event: Event) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.menu-content')) {
-      this.overlayMenuOpen = false;
+    if (this.overlayMenuOpen) {
+      this.scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${this.scrollY}px`;
+      document.body.style.width = '100%';
+    } else {
+      this.unlockScroll();
     }
   }
 
-  /**
-   * Navigates to the specified route and closes the overlay menu.
-   * @param route - The route to navigate to
-   */
-  navigateTo(route: string) {
+  private unlockScroll() {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, this.scrollY);
+  }
+
+  closeOverlayMenu(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.drawer')) {
+      this.overlayMenuOpen = false;
+      this.unlockScroll();
+    }
+  }
+
+  goHome() {
+    this.drawerCategory = 'All';
+    this.categoryService.select('All');
+  }
+
+  navigateTo(route: string, category?: string) {
     this.overlayMenuOpen = false;
+    this.unlockScroll();
+    if (category !== undefined) {
+      this.drawerCategory = category;
+      this.categoryService.select(category);
+    }
     this.router.navigate([route]);
   }
 }

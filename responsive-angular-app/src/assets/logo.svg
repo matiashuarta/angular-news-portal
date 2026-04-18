@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 58" fill="none">
+  <defs>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="ballGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffcc60"/>
+      <stop offset="100%" stop-color="#e65c00"/>
+    </linearGradient>
+    <linearGradient id="stickGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7a3200"/>
+      <stop offset="100%" stop-color="#cc5500"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ── Joystick ── -->
+  <!-- Shadow under base -->
+  <ellipse cx="29" cy="51" rx="21" ry="5" fill="rgba(0,0,0,0.4)"/>
+  <!-- Base plate -->
+  <ellipse cx="29" cy="48" rx="20" ry="6.5" fill="#1a0800" stroke="#ff9800" stroke-width="1.5"/>
+  <!-- Base inner highlight -->
+  <ellipse cx="29" cy="46.5" rx="11" ry="3" fill="rgba(255,152,0,0.12)"/>
+  <!-- Stick shaft -->
+  <rect x="27" y="16" width="4" height="30" rx="2" fill="url(#stickGrad)"/>
+  <!-- Stick highlight edge -->
+  <rect x="27" y="16" width="1.2" height="30" rx="0.6" fill="rgba(255,150,80,0.25)"/>
+  <!-- Ball -->
+  <circle cx="29" cy="12" r="10" fill="url(#ballGrad)" filter="url(#glow)"/>
+  <!-- Ball shine -->
+  <ellipse cx="25.5" cy="8.5" rx="3.5" ry="2.5" fill="rgba(255,255,255,0.28)" transform="rotate(-20,25.5,8.5)"/>
+  <!-- Ball micro-dot -->
+  <circle cx="29" cy="12" r="1.8" fill="rgba(0,0,0,0.18)"/>
+
+  <!-- ── Separator ── -->
+  <line x1="62" y1="9" x2="62" y2="50" stroke="#2a1500" stroke-width="1"/>
+
+  <!-- ── Text ── -->
+  <!-- GAME -->
+  <text x="74" y="31"
+        font-family="'Orbitron','Courier New',monospace"
+        font-size="23" font-weight="900"
+        fill="#ff9800"
+        letter-spacing="3"
+        filter="url(#softglow)">GAME</text>
+  <!-- Thin accent line under GAME -->
+  <rect x="74" y="34" width="96" height="1" rx="0.5" fill="rgba(255,152,0,0.3)"/>
+  <!-- NEWS PORTAL -->
+  <text x="75" y="47"
+        font-family="'Orbitron','Courier New',monospace"
+        font-size="10" font-weight="400"
+        fill="#999"
+        letter-spacing="5.5">NEWS PORTAL</text>
+</svg>

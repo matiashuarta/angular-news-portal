@@ -1,66 +1,84 @@
 .form-container {
-    max-width: 400px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: #222; /* Dark background for the form */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
-    text-align: center;
-  
-    h2 {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.8rem;
-      color: #ff9800;
-      margin-bottom: 1rem;
+  max-width: 420px;
+  margin: 3rem auto;
+  padding: 2.5rem 2rem;
+  background: #0f0a00;
+  border: 1px solid #2a2000;
+  border-radius: 14px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.7);
+  text-align: center;
+
+  @media (max-width: 768px) {
+    margin: 1.5rem auto;
+    padding: 2rem 1.5rem;
+  }
+
+  @media (max-width: 480px) {
+    margin: 1rem auto;
+    width: calc(100% - 2rem);
+    padding: 1.75rem 1.25rem;
+  }
+
+  h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: #ff9800;
+    margin: 0 0 2rem;
+  }
+
+  label {
+    display: block;
+    text-align: left;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: #666;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    background: #0a0700;
+    border: 1px solid #2a2000;
+    border-radius: 7px;
+    color: #fff;
+    margin-bottom: 1.25rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: #ff9800;
+      box-shadow: 0 0 12px rgba(255, 152, 0, 0.2);
     }
-  
-    label {
-      display: block;
-      text-align: left;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1rem;
-      color: #ff9800;
-      margin-bottom: 0.5rem;
-    }
-  
-    input {
-      width: 91%;
-      padding: 1rem; /* Increased padding for better usability */
-      font-size: 1rem;
-      background-color: #333; /* Slightly darker for contrast */
-      border: 1px solid #555; /* Lighter border for visibility */
-      border-radius: 5px;
-      color: #fff;
-      margin-bottom: 1.5rem;
-      outline: none;
-      transition: all 0.3s ease; /* Transition for all properties */
-  
-      /* Added box-shadow for a subtle glow effect on focus */
-      &:focus {
-        border-color: #ff9800;
-        box-shadow: 0 0 10px rgba(255, 152, 0, 0.5);
-      }
-  
-      /* Placeholder text color */
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.5);
-      }
-    }
-  
-    button {
-      width: 40%;
-      padding: 1rem; /* Increased padding for consistency */
-      font-size: 1.2rem;
-      font-family: 'Orbitron', sans-serif;
-      background-color: #ff9800;
-      color: #000;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-  
-      &:hover {
-        background-color: #e68a00; /* Slightly lighter shade on hover */
-      }
+
+    &::placeholder { color: #333; }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 0.9rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    background: #ff9800;
+    color: #000;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 700;
+    margin-top: 0.5rem;
+    transition: background 0.2s, box-shadow 0.2s;
+
+    &:hover {
+      background: #ffb74d;
+      box-shadow: 0 0 20px rgba(255, 152, 0, 0.35);
     }
   }
+}

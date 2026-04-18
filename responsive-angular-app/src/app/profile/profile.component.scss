@@ -1,0 +1,206 @@
+.profile-page {
+  min-height: 80vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 660px;
+  background: rgba(12, 8, 0, 0.92);
+  border: 1px solid #2a2000;
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 16px 60px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @media (max-width: 480px) { padding: 2rem 1.25rem; }
+}
+
+.profile-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #ff9800;
+  margin: 0 0 2rem;
+  text-transform: uppercase;
+}
+
+// ── Current avatar ────────────────────────────────────────────────────────────
+.current-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 0.3s;
+
+  mat-icon {
+    font-size: 3.5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+.avatar-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #ff9800;
+  margin: 0.65rem 0 0;
+}
+
+.user-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.35rem;
+  color: #ccc;
+  margin: 0.25rem 0 2rem;
+  letter-spacing: 0.05em;
+}
+
+// ── Avatar grid ───────────────────────────────────────────────────────────────
+.section-label {
+  width: 100%;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #777;
+  margin-bottom: 1.1rem;
+
+  .optional {
+    color: #555;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+
+  @media (max-width: 480px) { grid-template-columns: repeat(4, 1fr); gap: 0.55rem; }
+}
+
+.avatar-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border: 2px solid;
+  border-radius: 12px;
+  padding: 0.85rem 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .av-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  &.selected .av-label { color: #ddd; }
+  &:hover { transform: translateY(-3px); }
+}
+
+// ── Fields ────────────────────────────────────────────────────────────────────
+.field-group {
+  width: 100%;
+  margin-bottom: 1.25rem;
+
+  label {
+    display: block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 0.4rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.95rem 1.1rem;
+    background: #0a0700;
+    border: 1px solid #2a2000;
+    border-radius: 8px;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.1rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+
+    &:focus { border-color: #ff9800; box-shadow: 0 0 10px rgba(255,152,0,0.15); }
+    &::placeholder { color: #2e2000; }
+  }
+}
+
+// ── Save message ──────────────────────────────────────────────────────────────
+.save-message {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: #00cc66;
+  margin: 0.5rem 0 0;
+
+  &.error { color: #ff4444; }
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+
+  button {
+    flex: 1;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    padding: 1.05rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1.5px solid;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    color: #666;
+    border-color: #2a2000;
+
+    &:hover { border-color: #ff4500; color: #ff4500; }
+  }
+
+  .btn-save {
+    background: #ff9800;
+    color: #000;
+    border-color: #ff9800;
+    font-weight: 800;
+
+    &:hover { background: #ffb74d; border-color: #ffb74d; box-shadow: 0 0 24px rgba(255,152,0,0.4); }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}

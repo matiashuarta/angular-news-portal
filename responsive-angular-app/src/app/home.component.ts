@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CategoryService } from './category.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { NewsService } from './news-details/news.service';
@@ -8,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
+import { CategoryBarComponent } from './category-bar/category-bar.component';
 
 @Component({
   standalone: true,
@@ -23,32 +26,65 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
     MatMenuModule,
     MatToolbarModule,
     MatButtonModule,
+    CategoryBarComponent,
   ],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private catSub!: Subscription;
   topNews: any[] = [];
   otherNews: any[] = [];
   verticalNews: any[] = [];
   displayedVerticalNews: any[] = [];
   isAdmin: boolean = false;
   userName: string = '';
-  private readonly maxTiles = 3; // Limit vertical news to 3 tiles
+  private readonly maxTiles = 3;
+  mobileOtherLimit = 6;
 
-  constructor(private newsService: NewsService, private router: Router) {}
+  allNewsRaw: any[] = [];
+  categories = ['All', 'Multi', 'PC', 'Xbox', 'Playstation', 'Nintendo', 'Mobile', 'Esports'];
+  selectedCategory = localStorage.getItem('selectedCategory') ?? 'All';
+
+  @ViewChild('carousel') carouselRef!: ElementRef<HTMLElement>;
+
+  constructor(
+    private newsService: NewsService,
+    private router: Router,
+    private categoryService: CategoryService
+  ) {}
+
+  scrollCarousel(dir: number) {
+    this.carouselRef?.nativeElement.scrollBy({ left: dir * 300, behavior: 'smooth' });
+  }
 
   ngOnInit() {
     this.checkAdminStatus();
     this.newsService.getAllNews().subscribe((news) => {
-      // Filtrar Top News
-      this.topNews = news.filter((n: any) => n.isTopNews);
-  
-      // Filtrar Vertical News y Other News según el newsType
-      this.verticalNews = news.filter((n: any) => n.newsType === 'Vertical News');
-      this.otherNews = news.filter((n: any) => n.newsType === 'Other News');
-  
-      // Limitar el número de vertical news a mostrar inicialmente
-      this.displayedVerticalNews = this.verticalNews.slice(0, this.maxTiles);
+      this.allNewsRaw = news;
+      this.applyFilters();
     });
+    this.catSub = this.categoryService.selected$.subscribe(cat => {
+      this.selectedCategory = cat;
+      this.applyFilters();
+    });
+  }
+
+  ngOnDestroy() {
+    this.catSub?.unsubscribe();
+  }
+
+  selectCategory(cat: string) {
+    this.categoryService.select(cat);
+  }
+
+  private applyFilters() {
+    const news = this.selectedCategory === 'All'
+      ? this.allNewsRaw
+      : this.allNewsRaw.filter((n: any) => n.category === this.selectedCategory);
+
+    this.topNews = news.filter((n: any) => n.isTopNews);
+    this.verticalNews = news.filter((n: any) => n.newsType === 'Vertical News');
+    this.otherNews = news.filter((n: any) => n.newsType === 'Other News');
+    this.displayedVerticalNews = this.verticalNews.slice(0, this.maxTiles);
   }
 
   sliderConfig = {
@@ -101,9 +137,13 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  get mobileOtherNews() { return this.otherNews.slice(0, this.mobileOtherLimit); }
+
+  loadMoreMobileOther() { this.mobileOtherLimit += 6; }
+
   loadMoreNews() {
     const nextIndex = this.displayedVerticalNews.length + this.maxTiles;
-    this.displayedVerticalNews = this.verticalNews.slice(0, nextIndex); // Show 3 more each time
+    this.displayedVerticalNews = this.verticalNews.slice(0, nextIndex);
   }
 
   logout() {

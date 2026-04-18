@@ -1,0 +1,87 @@
+<app-category-bar [selected]="currentCategory" (categorySelect)="goToCategory($event)"></app-category-bar>
+
+<div *ngIf="loading" class="loading-page">Loading…</div>
+
+<ng-container *ngIf="!loading && topic">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a routerLink="/forum"><mat-icon>forum</mat-icon> Forum</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <a [routerLink]="['/forum/category', topic.category_slug]">{{ topic.category_name }}</a>
+    <mat-icon class="bc-sep">chevron_right</mat-icon>
+    <span class="bc-current">{{ topic.title }}</span>
+  </div>
+
+  <!-- Topic header -->
+  <div class="topic-header">
+    <div class="topic-header-inner">
+      <div class="topic-cat-badge" [style.background]="topic.category_color + '22'" [style.color]="topic.category_color">
+        {{ topic.category_icon }} {{ topic.category_name }}
+      </div>
+      <h1>{{ topic.title }}</h1>
+      <div class="topic-meta">
+        <span><mat-icon>person</mat-icon> {{ topic.username }}</span>
+        <span><mat-icon>chat_bubble_outline</mat-icon> {{ topic.post_count }} posts</span>
+        <span><mat-icon>visibility</mat-icon> {{ topic.view_count }} views</span>
+        <span *ngIf="topic.pinned" class="badge-pin"><mat-icon>push_pin</mat-icon> Pinned</span>
+        <span *ngIf="topic.locked" class="badge-lock"><mat-icon>lock</mat-icon> Locked</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts -->
+  <div class="posts-layout">
+    <div class="post-card" *ngFor="let p of posts; let i = index" [id]="'post-' + p.id">
+      <!-- Author sidebar -->
+      <div class="post-author">
+        <div class="author-avatar">{{ p.username[0].toUpperCase() }}</div>
+        <strong class="author-name">{{ p.username }}</strong>
+        <span class="rank-badge" [class]="rankClass(p.user_post_count)">
+          {{ rankLabel(p.user_post_count) }}
+        </span>
+        <span class="author-posts">{{ p.user_post_count }} posts</span>
+      </div>
+
+      <!-- Post body -->
+      <div class="post-body">
+        <div class="post-meta-top">
+          <span class="post-num">#{{ i + 1 }}</span>
+          <span class="post-time">{{ timeAgo(p.created_at) }}</span>
+        </div>
+        <p class="post-text">{{ p.body }}</p>
+        <div class="post-actions">
+          <button class="like-btn" [class.liked]="likedPosts.has(p.id)" (click)="toggleLike(p)">
+            <mat-icon>{{ likedPosts.has(p.id) ? 'favorite' : 'favorite_border' }}</mat-icon>
+            {{ p.like_count }}
+          </button>
+          <button *ngIf="canDelete(p)" class="del-btn" (click)="deletePost(p)">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reply box -->
+    <div class="reply-box" *ngIf="!topic.locked">
+      <div *ngIf="!isLoggedIn" class="login-prompt">
+        <mat-icon>lock</mat-icon>
+        <span>You must be <a routerLink="/login">logged in</a> to reply.</span>
+      </div>
+      <div *ngIf="isLoggedIn">
+        <h3>Reply</h3>
+        <textarea [(ngModel)]="replyText" rows="4" placeholder="Write your reply…" maxlength="5000"></textarea>
+        <p class="reply-error" *ngIf="postError">{{ postError }}</p>
+        <div class="reply-footer">
+          <button class="btn-post" [disabled]="posting || !replyText.trim()" (click)="postReply()">
+            <mat-icon>send</mat-icon>{{ posting ? 'Posting…' : 'Post Reply' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="locked-notice" *ngIf="topic.locked">
+      <mat-icon>lock</mat-icon> This topic is locked.
+    </div>
+  </div>
+</ng-container>

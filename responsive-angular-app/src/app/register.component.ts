@@ -15,6 +15,10 @@ export class RegisterComponent {
   password: string = '';
   confirmPassword: string = '';
 
+  private get apiBase() {
+    return `${window.location.protocol}//${window.location.hostname}:3000/api`;
+  }
+
   constructor(private http: HttpClient, private router: Router) {}
 
   register() {
@@ -22,36 +26,25 @@ export class RegisterComponent {
       alert('Passwords do not match');
       return;
     }
-  
-    this.http
-      .post('http://192.168.1.5:3000/api/register', {
-        username: this.username,
-        password: this.password,
-      })
-      .subscribe(
-        () => {
-          this.http
-            .post('http://192.168.1.5:3000/api/login', {
-              username: this.username,
-              password: this.password,
-            })
-            .subscribe(
-              (response: any) => {
-                localStorage.setItem('token', response.token);
-                console.log('Token stored:', localStorage.getItem('token'));
-                alert('Registration successful, logged in!');
-                this.router.navigate(['/']).then(() => {
-                  window.location.reload(); // Force a full page reload to update the login state
-                });
-              },
-              (error) => {
-                alert('Login failed after registration');
-              }
-            );
-        },
-        (error) => {
-          alert('Registration failed: ' + error.error.message);
-        }
-      );
+
+    this.http.post(`${this.apiBase}/register`, {
+      username: this.username,
+      password: this.password,
+    }).subscribe({
+      next: () => {
+        this.http.post(`${this.apiBase}/login`, {
+          username: this.username,
+          password: this.password,
+        }).subscribe({
+          next: (response: any) => {
+            localStorage.setItem('token', response.token);
+            alert('Registration successful!');
+            this.router.navigate(['/']).then(() => window.location.reload());
+          },
+          error: () => alert('Login failed after registration'),
+        });
+      },
+      error: (err) => alert('Registration failed: ' + (err.error?.message ?? err.message)),
+    });
   }
 }

@@ -1,0 +1,144 @@
+<app-category-bar [selected]="currentCategory" (categorySelect)="goToCategory($event)"></app-category-bar>
+
+<!-- Hero -->
+<div class="forum-hero">
+  <div class="forum-hero-inner">
+    <div>
+      <h1>GAME NEWS <span>Forum</span></h1>
+      <p>Community discussions, debates, and everything gaming.</p>
+    </div>
+    <button class="btn-new-topic" (click)="openNewTopic()">
+      <mat-icon>edit</mat-icon> New Topic
+    </button>
+  </div>
+</div>
+
+<!-- Stats bar -->
+<div class="forum-stats-bar">
+  <div class="stats-bar-inner">
+    <div class="forum-stat">
+      <span class="online-dot"></span>
+      <strong>{{ stats.members | number }}</strong> members
+    </div>
+    <div class="forum-stat">
+      <mat-icon>forum</mat-icon>
+      <strong>{{ stats.topics | number }}</strong> topics
+    </div>
+    <div class="forum-stat">
+      <mat-icon>chat_bubble_outline</mat-icon>
+      <strong>{{ stats.posts | number }}</strong> posts
+    </div>
+    <div class="forum-stat rank-wrap" *ngIf="isLoggedIn">
+      Your rank:
+      <span class="rank-badge" [class]="rankClass(myRank.rank)">{{ myRank.rank }}</span>
+    </div>
+  </div>
+</div>
+
+<!-- Main layout -->
+<div class="forum-layout">
+
+  <!-- Categories -->
+  <main class="categories-section">
+    <h2>Categories</h2>
+
+    <div *ngIf="!categories.length" class="loading-msg">Loading categories…</div>
+
+    <div class="category-card" *ngFor="let cat of categories">
+      <a class="cat-card-inner" [routerLink]="['/forum/category', cat.slug]">
+        <div class="cat-icon-wrap" [style.background]="cat.color + '22'">{{ cat.icon }}</div>
+        <div class="cat-info">
+          <h3>{{ cat.name }}</h3>
+          <p>{{ cat.description }}</p>
+        </div>
+        <div class="cat-stats">
+          <strong>{{ cat.topic_count }}</strong>
+          topics
+        </div>
+      </a>
+      <div class="category-topics">
+        <ng-container *ngIf="topicsForCategory(cat.id).length; else noTopics">
+          <a class="topic-preview-row" *ngFor="let t of topicsForCategory(cat.id)"
+             [routerLink]="['/forum/topic', t.id]">
+            <mat-icon class="pin-icon" *ngIf="t.pinned">push_pin</mat-icon>
+            <mat-icon class="pin-icon ghost" *ngIf="!t.pinned">push_pin</mat-icon>
+            <span class="tpr-title">{{ t.title }}</span>
+            <span class="tpr-count">{{ t.post_count }} {{ t.post_count === 1 ? 'post' : 'posts' }}</span>
+          </a>
+        </ng-container>
+        <ng-template #noTopics>
+          <div class="no-topics">No topics yet — be the first!</div>
+        </ng-template>
+      </div>
+    </div>
+  </main>
+
+  <!-- Sidebar -->
+  <aside class="forum-sidebar">
+
+    <!-- Hot topics -->
+    <div class="sidebar-widget">
+      <div class="widget-title"><mat-icon>local_fire_department</mat-icon> Hot Topics</div>
+      <div *ngIf="!hotTopics.length" class="widget-empty">No topics yet.</div>
+      <a class="hot-topic-row" *ngFor="let t of hotTopics; let i = index"
+         [routerLink]="['/forum/topic', t.id]">
+        <div class="hot-rank" [class.gold]="i===0" [class.silver]="i===1" [class.bronze]="i===2">{{ i + 1 }}</div>
+        <div class="hot-info">
+          <p>{{ t.title }}</p>
+          <span class="hot-meta">{{ t.post_count }} posts · {{ t.category_name }}</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Rank ladder -->
+    <div class="sidebar-widget">
+      <div class="widget-title"><mat-icon>military_tech</mat-icon> Forum Ranks</div>
+      <div class="rank-row"><span class="rank-badge rank-legend">Legend</span><span class="rank-info">200+ posts</span></div>
+      <div class="rank-row"><span class="rank-badge rank-veteran">Veteran</span><span class="rank-info">50–199 posts</span></div>
+      <div class="rank-row"><span class="rank-badge rank-regular">Regular</span><span class="rank-info">10–49 posts</span></div>
+      <div class="rank-row"><span class="rank-badge rank-recruit">Recruit</span><span class="rank-info">1–9 posts</span></div>
+      <div class="rank-row"><span class="rank-badge rank-lurker">Lurker</span><span class="rank-info">0 posts</span></div>
+    </div>
+
+    <!-- Rules -->
+    <div class="sidebar-widget">
+      <div class="widget-title"><mat-icon>push_pin</mat-icon> Quick Rules</div>
+      <ul class="rules-list">
+        <li>✅ Be respectful</li>
+        <li>✅ Stay on topic</li>
+        <li>✅ No spam or self-promo</li>
+        <li>✅ Tag spoilers clearly</li>
+        <li>✅ No piracy talk</li>
+      </ul>
+    </div>
+
+  </aside>
+</div>
+
+<!-- New Topic Modal -->
+<div class="modal-overlay" [class.open]="showNewTopic" (click)="closeNewTopic()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h2><mat-icon>edit</mat-icon> Create New Topic</h2>
+    <div class="modal-field">
+      <label>Category</label>
+      <select [(ngModel)]="newCat">
+        <option *ngFor="let cat of categories" [value]="cat.slug">{{ cat.icon }} {{ cat.name }}</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Title</label>
+      <input type="text" [(ngModel)]="newTitle" placeholder="What's your topic about?" maxlength="200" />
+    </div>
+    <div class="modal-field">
+      <label>Your Post</label>
+      <textarea [(ngModel)]="newBody" placeholder="Share your thoughts…" rows="5" maxlength="5000"></textarea>
+    </div>
+    <p class="modal-error" *ngIf="newTopicError">{{ newTopicError }}</p>
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeNewTopic()">Cancel</button>
+      <button class="btn-submit" [disabled]="submitting" (click)="submitTopic()">
+        {{ submitting ? 'Posting…' : 'Post Topic' }}
+      </button>
+    </div>
+  </div>
+</div>
