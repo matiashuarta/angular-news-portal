@@ -23,32 +23,25 @@
 <section class="news-section other-news-section">
   <h2>More News</h2>
 
-  <!-- Carousel: tablet + landscape phone -->
-  <div class="carousel-outer hide-on-portrait-mobile">
-    <button class="carousel-btn" (click)="scrollCarousel(-1)">
-      <mat-icon>chevron_left</mat-icon>
-    </button>
-    <div class="other-news-wrapper">
-      <div class="other-news-grid" #carousel>
-        <div class="news-card other-news" *ngFor="let item of otherNews">
+  <!-- 4-col grid: desktop & tablet -->
+  <div class="other-news-grid hide-on-portrait-mobile">
+    <div class="news-card other-news" *ngFor="let item of desktopOtherNews">
+      <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }">
+        <img [src]="item.image" alt="News Image" />
+      </a>
+      <div class="card-body">
+        <h3>
           <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }">
-            <img [src]="item.image" alt="News Image" />
+            {{ item.title }}
           </a>
-          <div class="card-body">
-            <h3>
-              <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }">
-                {{ item.title }}
-              </a>
-            </h3>
-            <p>{{ item.subtitle }}</p>
-            <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" class="read-more">Read More</a>
-          </div>
-        </div>
+        </h3>
+        <p>{{ item.subtitle }}</p>
+        <a [routerLink]="['/news', item.id]" [queryParams]="{ isAdmin: isAdmin }" class="read-more">Read More</a>
       </div>
     </div>
-    <button class="carousel-btn" (click)="scrollCarousel(1)">
-      <mat-icon>chevron_right</mat-icon>
-    </button>
+  </div>
+  <div class="show-more-container hide-on-portrait-mobile" *ngIf="otherNews.length > desktopOtherLimit">
+    <button (click)="loadMoreDesktopOther()" class="show-more-btn">Show More</button>
   </div>
 
   <!-- 2-col grid: portrait phone only -->

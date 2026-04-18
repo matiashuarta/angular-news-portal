@@ -1,54 +1,134 @@
 <div class="admin-container">
-    <h2>{{ isEditMode ? 'Edit News Item' : 'Create a New News Item' }}</h2>
+
+  <!-- ── Form ── -->
+  <div class="form-card">
+    <h2>{{ isEditMode ? 'Edit Article' : 'Create New Article' }}</h2>
     <form (ngSubmit)="saveNews()">
+
       <div class="form-group">
-        <label for="title">Title</label>
-        <input type="text" id="title" [(ngModel)]="title" name="title" required />
+        <label>Title</label>
+        <input type="text" [(ngModel)]="title" name="title" required />
       </div>
 
       <div class="form-group">
-        <label for="subtitle">Subtitle</label>
-        <input type="text" id="subtitle" [(ngModel)]="subtitle" name="subtitle" />
+        <label>Subtitle</label>
+        <input type="text" [(ngModel)]="subtitle" name="subtitle" />
       </div>
 
-       <!-- Category -->
-    <!-- <-- Cambios: nuevo campo -->
-    <div class="form-group">
-        <label for="category">Category</label>
-        <select id="category" [(ngModel)]="category" name="category">
-          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      <div class="form-group">
+        <label>Category</label>
+        <select [(ngModel)]="category" name="category">
+          <option value="Multi">Multi</option>
+          <option value="PC">PC</option>
+          <option value="Xbox">Xbox</option>
+          <option value="Playstation">Playstation</option>
+          <option value="Nintendo">Nintendo</option>
+          <option value="Mobile">Mobile</option>
+          <option value="Esports">Esports</option>
         </select>
       </div>
-      <!-- <-- Fin Cambios -->
-      
+
       <div class="form-group">
-        <label for="image">Image Path</label>
-        <input type="text" id="image" [(ngModel)]="image" name="image" />
-        <p>(e.g., "assets/newImage.jpg")</p>
+        <label>News Type</label>
+        <select [(ngModel)]="newsType" name="newsType">
+          <option value="Top News">Top News</option>
+          <option value="Other News">Other News</option>
+          <option value="Vertical News">Vertical News</option>
+        </select>
       </div>
-  
-      <div class="form-group">
-        <label for="fullText">Body</label>
-        <textarea id="fullText" [(ngModel)]="fullText" name="fullText" rows="5"></textarea>
-      </div>
-  
-      <div class="form-group">
-        <label for="relatedIds">Related News (IDs, comma-separated)</label>
-        <input type="text" id="relatedIds" [(ngModel)]="relatedIds" name="relatedIds" />
-      </div>
-  
-      <div class="form-group">
-        <label for="isTopNews">Is Top News</label>
-        <input type="checkbox" id="isTopNews" [(ngModel)]="isTopNews" name="isTopNews" />
+
+      <div class="form-group form-group--inline">
+        <label>
+          <input type="checkbox" [(ngModel)]="isTopNews" name="isTopNews" />
+          Top News (appears in hero section)
+        </label>
       </div>
 
       <div class="form-group">
-        <label for="newsType">News Type</label>
-        <select id="newsType" [(ngModel)]="newsType" name="newsType" required>
-          <option *ngFor="let type of newsTypes" [value]="type">{{ type }}</option>
-        </select>
+        <label>Image Path <span class="hint">(e.g. assets/image.jpg)</span></label>
+        <input type="text" [(ngModel)]="image" name="image" />
       </div>
-  
-      <button type="submit">{{ isEditMode ? 'Update News' : 'Create News' }}</button>
+
+      <div class="form-group">
+        <label>Body</label>
+        <textarea [(ngModel)]="fullText" name="fullText" rows="7"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Related Articles <span class="hint">(shown as "you may also like" inside the article)</span></label>
+        <div class="related-picker" *ngIf="allNews.length > 0">
+          <div
+            *ngFor="let item of allNews"
+            class="related-option"
+            [class.selected]="isRelated(item.id)"
+            (click)="toggleRelated(item.id)"
+          >
+            <span class="related-check">{{ isRelated(item.id) ? '✓' : '+' }}</span>
+            <span class="related-label">{{ item.title }}</span>
+            <span class="related-cat">{{ item.category }}</span>
+          </div>
+        </div>
+        <p class="hint" *ngIf="allNews.length === 0">Load the article list first.</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save">{{ isEditMode ? 'Update Article' : 'Create Article' }}</button>
+        <button *ngIf="isEditMode" type="button" class="btn-cancel" (click)="cancelEdit()">Cancel</button>
+      </div>
+
     </form>
   </div>
+
+  <!-- ── Article list ── -->
+  <div class="article-list">
+    <h2>Manage Articles</h2>
+
+    <div class="list-controls">
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search articles…"
+        [(ngModel)]="searchTerm"
+        name="searchTerm"
+        (ngModelChange)="onFilterChange()"
+      />
+      <select class="ctrl-select" [(ngModel)]="filterCategory" name="filterCategory" (ngModelChange)="onFilterChange()">
+        <option value="All">All Categories</option>
+        <option value="Multi">Multi</option>
+        <option value="PC">PC</option>
+        <option value="Xbox">Xbox</option>
+        <option value="Playstation">Playstation</option>
+        <option value="Nintendo">Nintendo</option>
+        <option value="Mobile">Mobile</option>
+        <option value="Esports">Esports</option>
+      </select>
+      <select class="ctrl-select" [(ngModel)]="sortMode" name="sortMode" (ngModelChange)="onFilterChange()">
+        <option value="date-desc">Newest first</option>
+        <option value="date-asc">Oldest first</option>
+        <option value="alpha-asc">A → Z</option>
+        <option value="alpha-desc">Z → A</option>
+      </select>
+    </div>
+
+    <p *ngIf="loadingList" class="list-status">Loading…</p>
+    <p *ngIf="!loadingList && filteredNews.length === 0" class="list-status">No articles found.</p>
+
+    <div *ngFor="let item of visibleNews" class="article-row">
+      <div class="article-info">
+        <span class="article-title">{{ item.title }}</span>
+        <span class="article-meta">{{ item.category }} · {{ item.newsType }}</span>
+      </div>
+      <div class="article-actions">
+        <button class="btn-edit" type="button" (click)="editArticle(item)">Edit</button>
+        <button class="btn-delete" type="button" (click)="deleteArticle(item.id)">Delete</button>
+      </div>
+    </div>
+
+    <div class="load-more-wrap" *ngIf="hasMore">
+      <button class="btn-load-more" type="button" (click)="loadMore()">
+        Load more ({{ filteredNews.length - displayedCount }} remaining)
+      </button>
+    </div>
+  </div>
+
+</div>
