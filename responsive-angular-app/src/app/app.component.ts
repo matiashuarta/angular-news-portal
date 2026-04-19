@@ -53,6 +53,15 @@ export class AppComponent implements OnInit {
       if (token) {
         try {
           const payload = JSON.parse(atob(token.split('.')[1]));
+          const expired = payload.exp && (Date.now() / 1000) > payload.exp;
+          if (expired) {
+            localStorage.removeItem('token');
+            this.isLoggedIn = false;
+            this.loggedInUser = null;
+            this.isAdmin = false;
+            this.authService.setAdminStatus(false);
+            return;
+          }
           this.isLoggedIn = true;
           this.loggedInUser = payload.username || 'User';
           this.isAdmin = payload.isAdmin || false;
