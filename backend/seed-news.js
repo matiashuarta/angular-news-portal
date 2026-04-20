@@ -1,214 +1,461 @@
-// seed-news.js — run with: node seed-news.js
-// Inserts sample news articles for each category into the SQLite database.
+// seed-news.js — run AFTER node server.js (which creates the tables)
+// Usage: node seed-news.js
+// Safe to run multiple times — uses INSERT OR IGNORE to skip existing IDs.
 
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 const db = new sqlite3.Database(path.join(__dirname, 'news_portal.db'), (err) => {
   if (err) { console.error('DB connection failed:', err); process.exit(1); }
-  console.log('Connected to database.');
+  console.log('Connected to news_portal.db');
 });
 
 const articles = [
-  // ── Nintendo ────────────────────────────────────────────────────────────────
   {
+    id: 1,
+    title: 'The Last of Us Part III: Shattered Paths',
+    subtitle: 'The Fragility of Survival',
+    image: 'assets/top1.jpg',
+    fullText: `Naughty Dog has officially announced The Last of Us Part III: Shattered Paths, a continuation of the critically acclaimed series that explores the aftermath of Ellie's harrowing journey. Set several years after the events of Part II, the story finds Ellie living in isolation, haunted by her past and struggling to rebuild her sense of purpose. Meanwhile, a new threat emerges in the form of a ruthless faction known as "The Scourge," whose brutal methods challenge the fragile remnants of human civilization.\n\nThe game will feature dual protagonists, allowing players to control both Ellie and a new character, Mia, a young scavenger searching for her lost family in a decaying metropolis. Naughty Dog promises even greater emotional depth, with player choices affecting relationships and the unfolding narrative. Enhanced stealth mechanics, expanded crafting options, and larger, more open environments provide fresh gameplay opportunities. Shattered Paths is set to release exclusively on PlayStation 5 in 2026, promising another gripping chapter in this iconic post-apocalyptic saga.`,
+    relatedIds: '[23,31,21,27,33]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 3,
+    title: ' Cyberpunk 2077: Echoes of the Grid Expansion Unveiled',
+    subtitle: 'The message of the creators is pretty clear',
+    image: 'assets/top3.jpg',
+    fullText: `CD Projekt Red has officially announced Cyberpunk 2077: Echoes of the Grid, a massive expansion that delves deeper into the digital underbelly of Night City. The story focuses on a mysterious AI entity known as "The Gridwalker," which has begun infiltrating corporate networks and manipulating key city functions. Players will explore entirely new districts, including the Neon Veil, a neon-lit vertical cityscape where rogue netrunners thrive, and the Abyss, a desolate wasteland on the city's outskirts where forgotten tech is buried.\n\nThe expansion introduces advanced hacking mechanics, allowing players to take over security systems, manipulate drones, and even rewrite NPC behavior. New cyberware options, like the "Phantom Cloak" for invisibility and the "Overclock Neural Boost" for enhanced reflexes, offer fresh gameplay strategies. CD Projekt Red also teased dynamic faction wars, where player choices can shift the balance of power between Night City's corporations and rebel groups. Slated for a 2025 release, Echoes of the Grid promises to expand the scope and depth of the Cyberpunk 2077 universe.`,
+    relatedIds: '[24,20,29,30,34]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 6,
+    title: 'GTA VI: Vice City Reborn',
+    subtitle: 'The Return to a Criminal Empire',
+    image: 'https://img.redbull.com/images/c_crop,w_3840,h_1920,x_0,y_47/c_auto,w_1200,h_630/f_auto,q_auto/redbullcom/2025/5/7/rqylbre2g7lrl0kosimn/jason-duval-grand-theft-auto-6',
+    fullText: `Rockstar Games has officially unveiled GTA VI: Vice City Reborn, marking the long-awaited return to the vibrant, crime-ridden streets of Vice City. Set in a modern-day reimagining of the iconic location, the game features a sprawling open world that includes not only the city itself but also expansive surrounding areas like the Everglades and neighboring island chains. Players will take on the role of Jason Cruz, an ambitious ex-con determined to rise through the ranks of Vice City's criminal underworld, alongside his partner Lucia, whose story ties to a local cartel.\n\nRockstar promises unprecedented freedom in how players build their empire, from managing drug operations and smuggling routes to orchestrating high-profile heists. The game will feature a dynamic economy that fluctuates based on player actions and in-game events, impacting everything from property prices to black-market deals. With cutting-edge graphics, a dynamic weather system, and the ability to seamlessly switch between Jason and Lucia, Vice City Reborn is set to redefine open-world gaming when it launches in 2026.`,
+    relatedIds: '[23,29,32,21,26]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 19,
+    title: 'Resident Evil: A New Chapter Announced',
+    subtitle: 'Capcom unveils secret well hidden',
+    image: 'assets/re.jpg',
+    fullText: `Capcom has officially announced the next installment in the iconic Resident Evil series, tentatively titled Resident Evil: Requiem. Set to take place in a sprawling European city, the game will feature a dynamic day-night cycle that drastically affects gameplay. Zombies and mutated creatures become more aggressive and numerous under the cover of darkness, forcing players to adapt their survival strategies. The protagonist is a new character, Alyssa Greene, a former scientist turned resistance fighter, whose backstory ties into the origins of the infamous Umbrella Corporation.\n\nFans can also expect the return of classic puzzle elements, coupled with enhanced environmental interaction powered by the RE Engine. Capcom revealed a teaser trailer showcasing haunting cityscapes, eerie underground labs, and a mysterious new enemy known only as "The Harbinger." With a planned release for next-gen consoles and PC in 2026, Resident Evil: Requiem aims to push the boundaries of survival horror while honoring its roots.`,
+    relatedIds: '[31,20,28,30,19]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 20,
+    title: 'FIFA 25 Introduces Revolutionary Career Mode Features',
+    subtitle: 'EA have something in their hands',
+    image: 'assets/fifa.png',
+    fullText: `EA Sports has unveiled major updates for FIFA 25, promising to elevate the beloved Career Mode to unprecedented levels. Players can now oversee their club's development across multiple decades, with dynamic historical records, aging stadiums, and the evolution of fan culture. For the first time, retired players can return as staff members, offering managerial advice or coaching specific player skills. A new negotiation system also allows for more immersive contract and transfer dealings, introducing player personalities and real-time consequences for broken promises.\n\nIn addition to the enhanced Career Mode, FIFA 25 features a revamped match engine that simulates more realistic ball physics and player animations. Dynamic weather conditions, such as sudden downpours or heatwaves, can now influence gameplay and team performance. EA Sports has also partnered with over 20 new leagues, expanding the roster of playable teams worldwide. With its release slated for later this year, FIFA 25 aims to cement its position as the definitive football simulation experience.`,
+    relatedIds: '[27,34,24,22,33]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 21,
+    title: 'Metroid Prime 4 Gets a Stunning Gameplay Reveal',
+    subtitle: 'Nintendo knows what its doing',
+    image: 'assets/samus.png',
+    fullText: `After years of anticipation, Nintendo has finally revealed gameplay footage of Metroid Prime 4, showcasing Samus Aran's return to breathtaking alien worlds. The trailer highlighted sprawling bioluminescent caves, volcanic wastelands, and an enigmatic space station orbiting a dying star. The game introduces new mechanics like the "Gravity Boots," allowing Samus to walk on walls and ceilings, and the "Chrono Beam," which temporarily slows time in a specific area to solve puzzles or gain combat advantages.\n\nRetro Studios has confirmed that Metroid Prime 4 will feature an open-ended structure, encouraging exploration and rewarding players for venturing off the beaten path. A new AI-driven enemy called "The Sentinel" relentlessly hunts Samus, adapting to her tactics with each encounter. Fans of the series have praised the return of the classic first-person perspective, now enhanced with stunning visuals running on the Nintendo Switch 2. The game is set for release in early 2025, marking a triumphant return for the franchise.`,
+    relatedIds: '[30,25,23,21,28]',
+    isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 22,
+    title: 'Ratchet and Clank: Rift Hunters Expands the Multiverse!',
+    subtitle: 'Sony shows what their up to with this franchise',
+    image: 'assets/rat.png',
+    fullText: `Insomniac Games has announced Ratchet and Clank: Rift Hunters, a direct sequel to Rift Apart, which will further explore the multiverse with even more mind-bending dimensions. Players will follow Ratchet, Clank, and Rivet as they team up to stop a new villain, the Dimension Weaver, who threatens to merge all realities into chaos. New gameplay mechanics include the "Dimensional Grappler," allowing instant traversal across vast distances, and customizable rift abilities that can alter physics or summon allies from alternate realities.\n\nThe game promises an expansive story with branching paths and multiple endings, influenced by player decisions across various dimensions. Fans can look forward to stunning visuals, with each dimension boasting unique art styles, from cyberpunk-inspired cities to lush, hand-painted jungles. Rift Hunters is set to launch exclusively on the PlayStation 5 in late 2025, cementing its place as one of the most visually impressive and innovative platformers of its time.`,
+    relatedIds: '[26,32,19,31,24]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 23,
+    title: 'Mario Party 12 Introduces Open-World Party Boards',
+    subtitle: 'Shigeru Miyamoto proposal reviewed',
+    image: 'assets/mp.png',
+    fullText: `Nintendo has officially revealed Mario Party 12, which takes a bold step by introducing open-world party boards for the first time in the franchise. Instead of the traditional fixed paths, players can freely explore massive themed worlds, each brimming with interactive elements, secret shortcuts, and mini-games hidden in every corner. These boards, ranging from a sprawling Mushroom Kingdom carnival to a haunted Boo Mansion, offer players the freedom to forge their own strategies in collecting stars and coins.\n\nNew mechanics like "Power-Up Points" allow players to unlock board-specific abilities, such as summoning allies or triggering environmental changes to hinder opponents. Nintendo promises that the game will still retain its chaotic charm, with random events ensuring no lead is ever truly safe. The mix of open exploration and traditional party game elements aims to breathe new life into the beloved series. Set to launch in Summer 2025, Mario Party 12 is poised to redefine multiplayer fun.`,
+    relatedIds: '[28,20,24,33,25]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 24,
+    title: 'Banjo-Kazooie: Return to Spiral Mountain Announced',
+    subtitle: 'Microsoft attacks Nintendo!',
+    image: 'assets/banjo.jpg',
+    fullText: `Rare has officially announced Banjo-Kazooie: Return to Spiral Mountain, marking the beloved duo's first mainline adventure in over two decades. The game will feature a massive open-world design, seamlessly connecting iconic locations like Spiral Mountain, Mumbo's Mountain, and Click Clock Wood. Players can expect a host of new mechanics, including Kazooie's "Feather Glider," allowing long-distance exploration, and Banjo's "Strength Boost," which unlocks new puzzle-solving opportunities.\n\nRare promises that the whimsical humor and quirky charm that defined the series will return, with a fresh yet nostalgic soundtrack by legendary composer Grant Kirkhope. New and returning characters, including Bottles, Mumbo Jumbo, and a mysterious antagonist named "The Riftmaker," will add depth to the story. With stunning visuals and modern gameplay innovations, Return to Spiral Mountain is set to launch exclusively on Xbox and PC in late 2025, reigniting excitement for this iconic platformer.`,
+    relatedIds: '[31,21,27,23,30]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 25,
+    title: 'God of War: The Fallen Pantheon Announced',
+    subtitle: 'Kratos makes a newly comeback',
+    image: 'assets/gow.jpeg',
+    fullText: `Santa Monica Studio has officially announced God of War: The Fallen Pantheon, a new chapter in Kratos' saga that introduces Egyptian and Celtic mythologies. Set after the events of God of War: Ragnarök, Kratos and Atreus find themselves drawn to the Nile's sacred waters, where they encounter gods such as Anubis and Horus, each with their own agendas. The narrative explores the fragile balance between pantheons, with Kratos caught in a power struggle that threatens to plunge the mortal world into chaos.\n\nThe game will feature larger, more open environments, blending lush deserts, dense jungles, and ancient temples with intricate puzzles and high-stakes combat. A revamped combat system introduces new weapons, including the Sun Spear and the Crescent Shield, each with unique abilities tied to the new mythologies. With stunning visuals, an emotionally charged story, and expansive new settings, The Fallen Pantheon is set to launch on PlayStation 5 and PC in 2026, promising to continue the evolution of the acclaimed franchise.`,
+    relatedIds: '[22,29,34,26,19]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 26,
+    title: 'Legend of Zelda: Echoes of the Ancients Teaser',
+    subtitle: 'Link comeback for Switch 2',
+    image: 'assets/loz.jpeg',
+    fullText: `Nintendo has released a cryptic teaser for The Legend of Zelda: Echoes of the Ancients, an upcoming entry in the franchise that delves deeper into Hyrule's forgotten history. The trailer showcases Link exploring ancient ruins buried beneath the surface, encountering glowing glyphs that seem to tell the story of a catastrophic event predating even the events of Skyward Sword. Zelda, now an archaeologist, plays a more active role, assisting Link in deciphering the mysteries of these lost civilizations.\n\nThe game will feature a unique dual-world mechanic, with Link able to travel between the present and an ancient version of Hyrule, each offering distinct puzzles and challenges. Nintendo has hinted that Echoes of the Ancients will also introduce new weapon and armor crafting systems, allowing players to customize their arsenal for specific tasks. With stunning visuals and a darker tone, the game is slated for release in late 2025, and fans are eagerly piecing together clues from the intriguing teaser.`,
+    relatedIds: '[25,32,20,28,21]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 27,
+    title: 'Retrogaming Booms as Millennials and Gen Z Embrace Classic Consoles',
+    subtitle: 'This is cool with the kids nowadays',
+    image: 'assets/other3.png',
+    fullText: `The popularity of retrogaming has surged in recent years, with millennials and Gen Z gamers turning to classic consoles like the NES, Sega Genesis, and original PlayStation for their gaming fix. Industry analysts attribute this trend to nostalgia and a growing appreciation for the simplicity and challenge of older titles. Iconic games such as Super Mario Bros., Sonic the Hedgehog, and Final Fantasy VII are seeing renewed interest, with physical cartridges and discs becoming highly sought-after collectibles.\n\nModern gaming platforms have also capitalized on this trend by offering retro collections and emulators, making it easier for younger audiences to experience these classics. Streaming services like Twitch and YouTube have further fueled the retrogaming craze, with influencers dedicating entire channels to speedrunning or reviewing vintage titles. As the demand for retro games continues to grow, hobbyists are even developing new titles for old hardware, keeping the spirit of classic gaming alive for future generations.`,
+    relatedIds: '[33,24,27,19,30]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 28,
+    title: 'Donkey Kong Country Returns HD Launching on Nintendo Switch',
+    subtitle: 'The famous Wii adventure comes to Switch',
+    image: 'assets/dk.jpg',
+    fullText: `Nintendo has announced that Donkey Kong Country Returns HD, a remastered version of the 2010 classic, will be launching on the Nintendo Switch in March 2025. The game features fully overhauled graphics, with vibrant, high-definition environments that bring the lush jungles, fiery volcanoes, and underwater caverns of Donkey Kong Island to life. Fans of the original can relive the thrilling platforming adventure in stunning detail, while new players will enjoy improved controls and quality-of-life enhancements.\n\nIn addition to the graphical upgrade, the HD version includes a brand-new world with five challenging levels and an extra-hard "Kong Mode" for seasoned players. A two-player co-op mode has been refined, allowing seamless drop-in/drop-out gameplay, whether playing locally or online. With its classic charm and modern improvements, Donkey Kong Country Returns HD promises to be a must-have title for Switch owners and a celebration of one of Nintendo's most beloved franchises.`,
+    relatedIds: '[24,31,26,22,34]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 29,
+    title: 'NBA 2K26 Introduces Life Beyond the Court ',
+    subtitle: 'Kobe comes back to life!',
+    image: 'assets/nba.png',
+    fullText: `2K Games has revealed major innovations for NBA 2K26, focusing on expanding the popular MyCareer mode. Players will now experience life beyond the court, with the ability to manage personal relationships, sign sponsorship deals, and invest in businesses. A dynamic decision-making system will impact everything from player stats to fan engagement, forcing gamers to balance their career aspirations with personal life choices. For example, attending a charity event could boost popularity but reduce time for training.\n\nThe game also introduces "Legacy Matches," where players can relive iconic NBA moments, recreating or rewriting history with modern players. Enhanced graphics and new motion-capture technology make player movements and facial expressions more realistic than ever, further immersing players in the basketball experience. With its blend of on- and off-court gameplay, NBA 2K26 is shaping up to be the most comprehensive entry in the franchise's history, launching on all major platforms in Fall 2025.`,
+    relatedIds: '[29,20,27,25,32]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 30,
+    title: 'Pokémon: Chronicles of Eternia Announced with Open-World Co-Op',
+    subtitle: 'Pokemon game recognition award',
+    image: 'assets/pokemon.jpg',
+    fullText: `The Pokémon Company has unveiled Pokémon: Chronicles of Eternia, a groundbreaking entry in the franchise that introduces fully open-world gameplay and cooperative multiplayer. Set in the ancient region of Eternia, players will embark on a quest to uncover the secrets of the mythical Pokémon Eterion, a creature said to have created the first Pokémon ecosystems. For the first time, up to four players can explore the region together, taking on dynamic missions, participating in massive raid battles, and discovering hidden lore.\n\nThe game introduces a new mechanic called "Bond Evolution," allowing trainers to form deeper connections with their Pokémon to unlock powerful, temporary forms during battle. With over 150 new Pokémon, a rich storyline, and seamless transitions between exploration and combat, Chronicles of Eternia aims to redefine the Pokémon experience. Scheduled for release on Nintendo Switch in late 2025, the game is already generating immense excitement among fans and newcomers alike.`,
+    relatedIds: '[30,23,21,28,19]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 31,
+    title: 'Star Fox: Infinite Horizons Announced with Space Exploration Focus',
+    subtitle: 'The fox and the rest of the farm unveiled',
+    image: 'assets/starfox.jpg',
+    fullText: `Nintendo has unveiled Star Fox: Infinite Horizons, the next evolution of the beloved space combat franchise. The game introduces expansive space exploration, allowing players to freely navigate the Lylat System and beyond, discovering uncharted planets, asteroid fields, and hidden space stations. Players can upgrade their iconic Arwing, customizing weapons, shields, and maneuverability to adapt to different environments and combat scenarios. Missions will range from intense dogfights to strategic planetary assaults, with seamless transitions between space and ground combat.\n\nA new character, Vega, a rogue bounty hunter with ties to Star Fox's past, adds a layer of intrigue to the story. The game also includes an online co-op mode, letting players team up for missions and competitive dogfights. With stunning visuals and a renewed focus on exploration and strategy, Star Fox: Infinite Horizons aims to reignite the franchise's legacy. The game is set for release on Nintendo Switch 2 in 2026.`,
+    relatedIds: '[31,25,19,28,32]',
+    isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 32,
+    title: 'Warcraft III: Legends Reborn Brings Modern Enhancements to a Classic',
+    subtitle: 'Blizzard trying to redeem themselves...again',
+    image: 'assets/w3.png',
+    fullText: `Blizzard has announced Warcraft III: Legends Reborn, a full remaster of the beloved RTS game, complete with updated graphics, reimagined cutscenes, and enhanced gameplay mechanics. The remaster includes all content from Reign of Chaos and The Frozen Throne, along with a brand-new campaign that explores the aftermath of Arthas' fall and the rise of new factions. The game's visuals have been rebuilt from the ground up, with highly detailed unit models, dynamic lighting, and lush, interactive environments.\n\nBlizzard is also introducing a revamped map editor, empowering players to create custom campaigns and game modes with unprecedented ease. A new online matchmaking system ensures balanced multiplayer battles, while cross-platform play allows PC and console users to compete seamlessly. Set for release in mid-2025, Legends Reborn aims to honor the legacy of Warcraft III while bringing its timeless strategy gameplay to a new generation of players.`,
+    relatedIds: '[26,33,24,31,22]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 33,
+    title: 'World of Warcraft: Age of Titans Introduces New Playable Race and Class',
+    subtitle: 'More details about these new additions',
+    image: 'assets/wow.png',
+    fullText: `Blizzard Entertainment has announced World of Warcraft: Age of Titans, the next major expansion for its long-running MMORPG. This expansion will introduce a new playable race, the Titanforged, and a new class, the Chronomancer. Set in the ancient Titan city of Uldazir, players will uncover lost knowledge and battle a mysterious faction known as the Shattered Pantheon, which seeks to reshape Azeroth's destiny. The new zones will feature dynamic world events, where players must band together to protect ancient Titan relics from invading forces.\n\nBlizzard has also revamped the crafting system, allowing for greater customization of weapons and armor, along with player-built outposts that evolve as quests are completed. The expansion introduces cross-faction guilds, breaking down barriers between Alliance and Horde players. With a cinematic trailer that teased an epic battle between Azeroth's champions and the Titans themselves, Age of Titans is set to release in late 2025, promising a thrilling new chapter for World of Warcraft.`,
+    relatedIds: '[26,33,24,31,22]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+  {
+    id: 34,
+    title: 'Uncharted: Legacy of the Lost Expands Nathan Drake\'s Saga',
+    subtitle: 'Nathan Drake and the gang up to something',
+    image: 'assets/u4.png',
+    fullText: `Naughty Dog has announced Uncharted: Legacy of the Lost, a new entry in the critically acclaimed franchise, focusing on Nathan Drake's post-retirement adventures. When an old friend discovers clues leading to the fabled city of Ophir, Drake is reluctantly drawn back into a world of ancient mysteries and treacherous foes. The game introduces vast, semi-open environments, allowing players to explore dense jungles, perilous mountain ranges, and submerged ruins, each filled with hidden treasures and deadly traps.\n\nThe combat system has been overhauled to include more fluid melee combat, dynamic stealth mechanics, and environmental interactions. Legacy of the Lost will also feature a co-op mode, where players can team up as Drake and his partner to solve complex puzzles and take on challenging enemies. With breathtaking visuals, an emotionally charged story, and heart-pounding action sequences, Uncharted: Legacy of the Lost is set to launch exclusively on PlayStation 5 in late 2025, promising to deliver the next great chapter in the series.`,
+    relatedIds: '[29,26,30,22,24]',
+    isTopNews: 0,
+    newsType: 'Vertical News',
+    category: 'Multi',
+    authorName: 'Admin',
+  },
+
+  // ── Nintendo ─────────────────────────────────────────────────────────────────
+  {
+    id: 35,
     title: 'Nintendo Switch 2 Officially Revealed: Everything We Know',
     subtitle: 'Bigger screen, magnetic Joy-Cons, and a launch lineup that includes a new Mario Kart',
-    image: 'assets/img1.jpg',
+    image: 'https://gaming-cdn.com/images/news/articles/10185/cover/1000x563/nintendo-ha-anunciado-oficialmente-la-switch-2-cover6789075867892.jpg',
     fullText: `Nintendo has officially lifted the curtain on its next-generation console, the Nintendo Switch 2. The device features a larger 7.9-inch LCD screen, redesigned magnetic Joy-Con controllers that click into place, and a more powerful processor built on a custom NVIDIA chipset.\n\nThe launch window has been confirmed for 2025, with a new Mario Kart title serving as the headline release alongside a Zelda remaster and a new 3D Donkey Kong game. The console retains the signature hybrid design that made the original Switch a global phenomenon.\n\nBackward compatibility with existing Switch titles has been confirmed, though some games may require patches to run at higher resolutions. Nintendo also teased online infrastructure improvements, though specifics remain scarce.\n\nPre-order information is expected to arrive within the coming weeks. Pricing has not yet been disclosed.`,
-    category: 'Nintendo',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Nintendo',
     authorName: 'Admin',
   },
   {
+    id: 36,
     title: 'The Legend of Zelda: Echoes of the Kingdom — First Impressions',
     subtitle: 'Link returns to Hyrule in a surprise Nintendo Direct reveal, and it looks breathtaking',
-    image: 'assets/img2.jpg',
+    image: 'https://nintenduo.com/wp-content/uploads/2024/09/Zelda-Echoes-of-Wisdom-Conexion.webp',
     fullText: `Nintendo surprised fans during a mid-year Direct with the first look at The Legend of Zelda: Echoes of the Kingdom, a brand-new entry in the mainline Zelda series built for Nintendo Switch 2.\n\nThe game appears to blend the open-world freedom introduced in Breath of the Wild with a darker tone reminiscent of Majora's Mask. Players will explore a fractured Hyrule where time itself has become unstable, causing ruins and ancient memories to bleed into the present.\n\nThe art style has evolved significantly, featuring more detailed environments, expressive character animations, and a dynamic weather system that visibly affects gameplay. New mechanical puzzles involve manipulating temporal echoes — ghostly replicas of past states of objects and terrain.\n\nNo release window was given, but Nintendo confirmed the title is targeting a 2026 launch exclusively on Nintendo Switch 2.`,
-    category: 'Nintendo',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Nintendo',
     authorName: 'Admin',
   },
   {
+    id: 37,
     title: 'Metroid Prime 4: Beyond Gets Release Date and Final Trailer',
     subtitle: 'Samus returns in a visually stunning sequel over a decade in the making',
-    image: 'assets/img3.jpg',
+    image: 'https://gaming-cdn.com/images/news/articles/14406/cover/metroid-prime-4-beyond-ya-ha-sido-clasificado-en-estados-unidos-cover68a6d782a7cfb.jpg',
     fullText: `After years of development turmoil and a full restart in 2019, Metroid Prime 4: Beyond finally has a confirmed release date. Nintendo announced the game will launch exclusively on Nintendo Switch on July 18, 2025, accompanied by a cinematic final trailer.\n\nThe trailer reveals that Samus Aran is investigating a rogue AI network that has infiltrated Galactic Federation systems, hinting at a storyline that directly follows events from Metroid Fusion. Several new alien biomes were shown, including a bioluminescent ocean world and a derelict space station overtaken by parasitic flora.\n\nRetro Studios, the developer behind the original Prime trilogy, confirmed the game runs at a locked 60fps in docked mode and introduces a fully optional third-person camera toggle for exploration segments.\n\nA special edition including a Samus amiibo and a steelbook case will be available at select retailers.`,
-    category: 'Nintendo',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Nintendo',
     authorName: 'Admin',
   },
 
-  // ── Xbox ─────────────────────────────────────────────────────────────────────
+  // ── Xbox ──────────────────────────────────────────────────────────────────────
   {
+    id: 38,
     title: 'Xbox Game Pass Gets Its Biggest Month Ever in June',
     subtitle: 'Starfield expansion, Doom: The Dark Ages, and 14 other titles added this month',
-    image: 'assets/img4.jpg',
+    image: 'https://i0.wp.com/levelup.buscafs.com/2025/09/Xbox-Game-Pass.jpg?fit=1010,566&quality=75&strip=all',
     fullText: `Microsoft has announced what it calls the biggest single month of Xbox Game Pass additions in the service's history. June 2025 brings 16 new titles to the subscription platform, headlined by Doom: The Dark Ages on day one and the long-awaited Shattered Space expansion for Starfield.\n\nOther notable additions include a new Indiana Jones game from MachineGames, a remaster of Fable 2 from Playground Games, and a surprise inclusion of Final Fantasy XVI after its exclusivity period on PlayStation ended.\n\nGame Pass Ultimate subscribers also gain access to five new games through the EA Play integration, including the latest Dragon Age and a remastered version of Mass Effect: Andromeda.\n\nMicrosoft reiterated its commitment to day-one releases for all first-party titles, with the next major Xbox Studio release — a new Perfect Dark — confirmed to arrive day one on Game Pass later this year.`,
-    category: 'Xbox',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Xbox',
     authorName: 'Admin',
   },
   {
+    id: 39,
     title: 'Fable Reboot: 20 Minutes of Gameplay Shown at Xbox Showcase',
     subtitle: "Playground Games' long-awaited RPG looks like nothing else on the market",
-    image: 'assets/img5.jpg',
+    image: 'https://www.lotkeys.com/uploads/blog/g-fjbopw0aasaql-lUGe.jpeg.webp',
     fullText: `Playground Games finally gave fans an extended look at Fable during the Xbox Games Showcase, showing a continuous 20-minute gameplay sequence set in the game's open world.\n\nThe sequence demonstrated fluid combat that blends swords, spells, and firearms in a system that rewards experimentation. The world itself is densely packed with NPCs that remember player actions, adapting their behavior over time. The classic Fable morality system returns with a modern twist: instead of a binary good/evil slider, choices ripple outward and create factional reputation across different settlements.\n\nThe game runs on a modified version of the Forza Motorsport engine, with extraordinary foliage density and dynamic lighting. Voice acting appeared notably strong, with sharp British wit throughout.\n\nFable launches exclusively on Xbox Series X|S and PC in Holiday 2025, with day-one availability on Game Pass.`,
-    category: 'Xbox',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Xbox',
     authorName: 'Admin',
   },
 
-  // ── PC ───────────────────────────────────────────────────────────────────────
+  // ── PC ────────────────────────────────────────────────────────────────────────
   {
+    id: 40,
     title: 'NVIDIA RTX 5090 Benchmarks Leak: A Generational Leap or Just a Refresh?',
     subtitle: 'Independent testing surfaces ahead of launch, showing massive gains in ray-traced titles',
-    image: 'assets/img6.jpg',
+    image: 'https://www.nvidia.com/content/dam/en-zz/Solutions/geforce/graphic-cards/50-series/rtx-5090/geforce-rtx-5090-learn-more-og-1200x630.jpg',
     fullText: `Benchmark results for NVIDIA's upcoming RTX 5090 graphics card have surfaced online ahead of its official launch, and the numbers are generating significant discussion across the PC enthusiast community.\n\nIn ray-traced workloads, the RTX 5090 shows roughly 60–70% improvement over the RTX 4090 at 4K, a generational jump not seen since the RTX 3080 to RTX 4090 transition. Rasterization improvements are more modest at around 35–40%, which some analysts attribute to the continued focus on AI-assisted rendering through DLSS 4.\n\nThe DLSS 4 Multi Frame Generation feature — which can generate up to three synthetic frames for every real one — plays a substantial role in the advertised frame rates, raising questions about latency and image quality from competitive players.\n\nTDP reportedly sits at 600W, requiring a new 16-pin connector configuration. Pricing is expected to start at $1,999 for the Founders Edition.`,
-    category: 'PC',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'PC',
     authorName: 'Admin',
   },
   {
+    id: 41,
     title: 'Half-Life 3 Confirmed? Valve Files Trademarks Hinting at New Entry',
     subtitle: 'A set of new trademark filings from Valve has the internet in a frenzy once again',
-    image: 'assets/img1.jpg',
+    image: 'https://es.egamersworld.com/uploads/blog/1546870744203.webp',
     fullText: `Valve Corporation has filed a series of trademarks related to the Half-Life intellectual property, including what appears to be a new subtitle. The filings, discovered by trademark watchers, include both software and merchandise categories, fueling speculation that an announcement could be imminent.\n\nThis would not be the first time such filings have caused speculation — similar activity preceded the announcement of Half-Life: Alyx in 2019. That title went on to become one of the most critically acclaimed VR games ever made.\n\nIndustry insiders have noted that Valve has been quietly expanding its internal development team over the past two years, with particular emphasis on narrative designers and environment artists — roles consistent with a single-player story-driven sequel.\n\nValve has not commented. Whether this represents Half-Life 3, another VR spin-off, or something else entirely remains unknown.`,
-    category: 'PC',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'PC',
     authorName: 'Admin',
   },
 
-  // ── Playstation ──────────────────────────────────────────────────────────────
+  // ── Playstation ───────────────────────────────────────────────────────────────
   {
+    id: 42,
     title: "Sony's State of Play June 2025: All Announcements Ranked",
     subtitle: 'Ghost of Tsushima 2, a new FromSoftware IP, and a surprise PS5 Pro bundle headlined the show',
-    image: 'assets/img2.jpg',
+    image: 'https://cdn.mos.cms.futurecdn.net/p8mbYzWrBRft6i6FUmDbEM.jpg',
     fullText: `Sony's June State of Play delivered over 40 minutes of new game reveals and updates, and it may have been one of the strongest showings in the PlayStation showcase's history.\n\nThe undisputed highlight was the world premiere of Ghost of Tsushima 2, set in feudal Korea and following a new protagonist. Sucker Punch Productions showed roughly five minutes of gameplay, revealing a dramatically expanded combat system with new weapon types and an environmental stealth mechanic.\n\nFromSoftware appeared with a brief but stunning teaser for an entirely new IP — not Elden Ring 2, not Bloodborne — featuring a science-fiction setting with organic mech suits and what appeared to be a co-op mode.\n\nSony also announced a PS5 Pro bundle paired with a 4K monitor at a competitive price point, aiming to capture the living-room-to-desktop gaming market. PlayStation Plus Extra and Premium tiers received multiple new additions effective immediately.`,
-    category: 'Playstation',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Playstation',
     authorName: 'Admin',
   },
   {
+    id: 43,
     title: 'Spider-Man 3 in Development at Insomniac, Targets PS6 Launch Window',
     subtitle: 'Internal documents confirm the next entry is being designed around next-gen hardware from the ground up',
-    image: 'assets/img3.jpg',
+    image: 'https://gameover.vg/wp-content/uploads/2015/04/spiderman3-play.jpg',
     fullText: `Following the massive success of Marvel's Spider-Man 2, Insomniac Games has confirmed that a third entry in the series is currently in active development. The studio's creative director confirmed the news in an interview, while noting that the game is being designed primarily for PlayStation 6 hardware.\n\nThe announcement positions Spider-Man 3 as a launch-window title for Sony's next console, rather than a cross-generation release. This represents a notable departure from Sony's recent strategy of supporting PS4 alongside PS5 titles well into the current generation.\n\nInsomniac described the game as "the most ambitious Spider-Man story we've ever told," with both Peter Parker and Miles Morales confirmed to return as playable characters. The studio hinted at a third playable hero without revealing their identity.\n\nNo release date or window was provided. PlayStation 6 is expected to launch in late 2027 or early 2028.`,
-    category: 'Playstation',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Playstation',
     authorName: 'Admin',
   },
 
-  // ── Esports ──────────────────────────────────────────────────────────────────
+  // ── Esports ───────────────────────────────────────────────────────────────────
   {
+    id: 44,
     title: 'Team Vitality Win the CS2 Major in Dramatic Fashion',
     subtitle: 'A stunning comeback in the grand final cements Vitality as the most dominant team of 2025',
-    image: 'assets/img4.jpg',
+    image: 'https://esportsinsider.com/wp-content/uploads/2025/04/Team-Vitality-Wins-ESL-Grand-Slam-IEM-Melbourne.jpg',
     fullText: `Team Vitality claimed the CS2 Major championship in Copenhagen after one of the most dramatic grand finals in tournament history. Facing off against NAVI in a best-of-five series, Vitality came back from a 0-2 deficit to win the next three maps and claim the trophy and the $1,000,000 prize pool.\n\nThe series MVP was ZywOo, who posted a 1.38 rating across the final two maps, including a one-vs-three clutch on the 29th round of the deciding map that swung the entire series momentum.\n\nNAVI's early dominance was built on the back of outstanding performances from s1mple, who has publicly stated this may be his final Major. The French squad's adaptation mid-series — switching to an aggressive eco timing strategy — was widely praised as a coaching masterclass.\n\nWith the Major win, Vitality solidify their number one ranking and qualify directly for the year-end BLAST Premier World Final.`,
-    category: 'Esports',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Esports',
     authorName: 'Admin',
   },
   {
+    id: 45,
     title: 'League of Legends Worlds 2025: Bracket Stage Preview',
     subtitle: 'T1 and JDG Gaming emerge from groups as overwhelming favorites to meet in the final',
-    image: 'assets/img5.jpg',
+    image: 'https://cdn2.unrealengine.com/a-beginner-s-guide-to-league-of-legends-teemo-1215x717-dc27844d5953.jpg',
     fullText: `The Worlds 2025 bracket stage is set, and the path to the Summoner's Cup has never looked more contested. T1 topped Group A with a perfect 6-0 record, with Faker posting statistical performances not seen since his peak years in 2016 and 2017.\n\nJDG Gaming, representing the LPL, took Group B with 5-1, with their bot lane duo of Hope and Missing widely considered the best in the world right now. Their victory came despite a shock early loss to Fnatic in week one, which briefly destabilized their group positioning.\n\nThe notable surprise of the group stage was Cloud9 advancing to bracket as the second seed out of Group C. The North American squad narrowly edged out Gen.G in the tiebreaker, in what was one of the most entertaining series of the tournament.\n\nQuarterfinals begin Saturday. A potential T1 vs JDG final would be the most watched Worlds match in the event's fourteen-year history.`,
-    category: 'Esports',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Esports',
     authorName: 'Admin',
   },
 
   // ── Mobile ────────────────────────────────────────────────────────────────────
   {
+    id: 46,
     title: 'Genshin Impact Version 5.5 Brings a New Region and Overhauled Exploration',
     subtitle: 'HoYoverse reveals Katlan, a wind-swept archipelago with vertical traversal mechanics unlike anything in the game',
-    image: 'assets/img6.jpg',
+    image: 'https://www.impericon.com/cdn/shop/articles/20240717_Genshin5.0_1.jpg?v=1721218120',
     fullText: `HoYoverse has revealed the full contents of Genshin Impact Version 5.5, headlined by the introduction of Katlan — a brand-new region built around wind currents, aerial combat, and multi-tiered vertical exploration.\n\nUnlike previous regions which were largely horizontal open worlds, Katlan emphasizes height. Characters can now ride updrafts between floating island chains, and a new Glide Mastery system rewards skilled aerial navigation with combat bonuses during descents.\n\nTwo new five-star characters are joining the roster this patch: Aranara, an Anemo swordsman with a passive that creates temporary wind platforms mid-air, and Selene, a Cryo archer whose charged shots curve around terrain.\n\nThe update also includes a permanent expansion to the Serenitea Pot housing system, new multiplayer co-op domains with exclusive cosmetic rewards, and a rerun banner lineup featuring Hu Tao and Kazuha for returning favorites.\n\nVersion 5.5 launches June 11 across all platforms including iOS, Android, and PC.`,
-    category: 'Mobile',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Mobile',
     authorName: 'Admin',
   },
   {
+    id: 47,
     title: 'Clash of Clans Introduces Builder Base 3.0 with Async PvP Overhaul',
     subtitle: 'Supercell completely reimagines the secondary village mode after years of community feedback',
-    image: 'assets/img1.jpg',
+    image: 'https://imagenes.hobbyconsolas.com/files/image_1280_720/uploads/imagenes/2023/04/25/6900bcb8e2661.jpeg',
     fullText: `Supercell has announced a sweeping overhaul of Clash of Clans' Builder Base in what is being called the most significant update to the mode since its introduction in 2017.\n\nBuilder Base 3.0 replaces the existing asynchronous attack system with a new League format where players attack and defend within time windows, creating a more competitive and socially engaging experience. Defense replays are now visible in real time, and a new spectator feature lets Clan members watch ongoing Builder Base attacks live.\n\nNew defenses include the Storm Cannon, which charges between shots for a high-damage burst, and the Phantom Barrier, a deployable wall section that absorbs a set amount of damage before collapsing. Several existing defenses have been rebalanced to reduce the dominance of air attack strategies that had made Builder Base feel stale.\n\nThe update rolls out globally across iOS and Android on June 24, with a free cosmetic reward available to all players who log in during the first two weeks.`,
-    category: 'Mobile',
+    relatedIds: '[]',
+    isTopNews: 1,
     newsType: 'Other News',
-    isTopNews: 0,
+    category: 'Mobile',
     authorName: 'Admin',
   },
 
-  // ── Multi (keep some existing-style articles) ─────────────────────────────
+  // ── Multi (external URLs) ─────────────────────────────────────────────────────
   {
+    id: 48,
     title: 'GTA VI Release Date Confirmed: October 2025 Launch Across All Platforms',
     subtitle: 'Rockstar ends years of silence with a release date and a new gameplay deep-dive trailer',
-    image: 'assets/img2.jpg',
+    image: 'https://gaming-cdn.com/images/news/articles/18970/cover/la-version-de-gta-vi-para-pc-podria-salir-en-febrero-del-ano-que-viene-cover69d8b28e4e0d4.jpg',
     fullText: `After what may be the most anticipated wait in gaming history, Rockstar Games has confirmed that Grand Theft Auto VI will launch on October 17, 2025, simultaneously across PlayStation 5, Xbox Series X|S, and PC.\n\nThe announcement came alongside a 12-minute gameplay deep-dive trailer showing Vice City in unprecedented detail. The city spans three times the playable area of GTA V's Los Santos, with living neighborhoods that change dynamically based on time of day, weather, and player-driven events.\n\nConfirmed for the first time are the game's two protagonists: Lucia, a career criminal recently released from prison, and Jason, a mid-level cartel enforcer whose interests eventually align with hers. The trailer suggests a dual-protagonist structure similar to GTA V, with the ability to switch between characters during open-world exploration.\n\nRockstar also confirmed that GTA Online will receive a massive update on launch day, featuring a rebuilt Vice City with cross-save support from the single-player world state.`,
-    category: 'Multi',
-    newsType: 'Top News',
+    relatedIds: '[]',
     isTopNews: 1,
+    newsType: 'Top News',
+    category: 'Multi',
     authorName: 'Admin',
   },
   {
+    id: 49,
     title: 'The Game Awards 2025: Game of the Year Nominees Revealed',
     subtitle: 'Six titles compete for the most prestigious prize in gaming, with multiple surprise inclusions',
-    image: 'assets/img3.jpg',
+    image: 'https://thegameawards.com/jpegs/tga-bg-video-2025-poster.jpg',
     fullText: `Geoff Keighley has unveiled the nominees for The Game Awards 2025, with six titles competing for Game of the Year in what many industry observers are calling the strongest year for gaming since 2017.\n\nThe nominees are: Doom: The Dark Ages (id Software / Bethesda), Elden Ring: Nightreign (FromSoftware), Ghost of Tsushima 2 (Sucker Punch), Fable (Playground Games), Metroid Prime 4: Beyond (Retro Studios), and a surprise entry — Hollow Knight: Silksong, which launched in August to near-universal acclaim after its seven-year development cycle.\n\nSilksong's inclusion drew the loudest reaction from the community, with many considering its belated release the year's most unexpected gaming moment. Team Cherry's sequel currently holds a 97 on Metacritic.\n\nPublic voting is now open and accounts for 10% of the final score alongside the jury vote. The ceremony takes place December 12 at the Peacock Theater in Los Angeles.`,
-    category: 'Multi',
-    newsType: 'Other News',
+    relatedIds: '[]',
     isTopNews: 0,
+    newsType: 'Other News',
+    category: 'Multi',
     authorName: 'Admin',
   },
 ];
 
-function runMigrations(cb) {
-  const silent = () => {};
-  db.run(`ALTER TABLE news ADD COLUMN relatedIds TEXT DEFAULT '[]'`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN newsType TEXT DEFAULT 'Other News'`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN category TEXT DEFAULT 'Multi'`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN authorId INTEGER DEFAULT NULL`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN authorName TEXT DEFAULT 'Admin'`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN createdAt DATETIME DEFAULT CURRENT_TIMESTAMP`, silent);
-  db.run(`ALTER TABLE news ADD COLUMN updatedAt DATETIME DEFAULT NULL`, silent, cb);
-}
-
 function insertArticles() {
   db.serialize(() => {
     const stmt = db.prepare(`
-      INSERT INTO news (title, subtitle, image, fullText, category, newsType, isTopNews, authorName)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT OR IGNORE INTO news (id, title, subtitle, image, fullText, relatedIds, isTopNews, newsType, category, authorName)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const a of articles) {
       stmt.run(
-        a.title, a.subtitle, a.image, a.fullText,
-        a.category, a.newsType, a.isTopNews, a.authorName,
+        a.id, a.title, a.subtitle, a.image, a.fullText,
+        a.relatedIds, a.isTopNews, a.newsType, a.category, a.authorName,
         (err) => { if (err) console.error('Insert error:', a.title, err); }
       );
       console.log(`  ✓ [${a.category}] ${a.title}`);
     }
 
     stmt.finalize(() => {
-      console.log(`\nDone — inserted ${articles.length} articles.`);
+      console.log(`\nDone — seeded ${articles.length} articles.`);
       db.close();
     });
   });
 }
 
-db.serialize(() => {
-  runMigrations(insertArticles);
-});
+db.serialize(insertArticles);
