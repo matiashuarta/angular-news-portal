@@ -262,23 +262,29 @@ app.get('/api/news/:id', (req, res) => {
       item.likes = voteCounts.totalLikes || 0;
       item.dislikes = voteCounts.totalDislikes || 0;
 
-      // Luego resolvemos las "related"
-      db.all(
-        `SELECT * FROM news WHERE id IN (${item.relatedIds.map(() => '?').join(',')})`,
-        item.relatedIds,
-        (errRel, related) => {
-          if (errRel) {
-            console.error('Error fetching related news:', errRel);
-            return res.status(500).json({ error: 'Database error while fetching related news' });
+      // Resolve related articles:
+      // - manual picks if relatedIds set, otherwise auto-fetch by same category
+      const mapRow = row => ({ ...row, relatedIds: JSON.parse(row.relatedIds || '[]'), isTopNews: row.isTopNews === 1 });
+
+      if (item.relatedIds.length) {
+        db.all(
+          `SELECT * FROM news WHERE id IN (${item.relatedIds.map(() => '?').join(',')})`,
+          item.relatedIds,
+          (errRel, related) => {
+            if (errRel) return res.status(500).json({ error: 'Database error while fetching related news' });
+            res.json({ news: item, related: related.map(mapRow) });
           }
-          const relatedNews = related.map(row => ({
-            ...row,
-            relatedIds: JSON.parse(row.relatedIds || '[]'),
-            isTopNews: row.isTopNews === 1
-          }));
-          res.json({ news: item, related: relatedNews });
-        }
-      );
+        );
+      } else {
+        db.all(
+          `SELECT * FROM news WHERE category = ? AND id != ? ORDER BY id DESC LIMIT 4`,
+          [item.category, item.id],
+          (errRel, related) => {
+            if (errRel) return res.status(500).json({ error: 'Database error while fetching related news' });
+            res.json({ news: item, related: related.map(mapRow) });
+          }
+        );
+      }
     });
   });
 });
@@ -347,6 +353,34 @@ app.post('/api/news/:id/vote', authenticateToken, (req, res) => {
 });
 // <-- Fin Cambios: Nueva ruta POST /api/news/:id/vote
 
+// Cascade demotion: keep only the newest N articles in each section.
+// Latest News (isTopNews) → overflow goes to More News
+// More News (Other News)  → overflow goes to Past News (Vertical News)
+const MAX_TOP_NEWS   = 14;
+const MAX_OTHER_NEWS = 15;
+
+function cascadeDemotion(cb) {
+  db.serialize(() => {
+    // Keep newest MAX_TOP_NEWS as top news, demote the rest to Other News
+    db.run(`
+      UPDATE news SET isTopNews = 0, newsType = 'Other News'
+      WHERE isTopNews = 1
+        AND id NOT IN (
+          SELECT id FROM news WHERE isTopNews = 1 ORDER BY id DESC LIMIT ?
+        )
+    `, [MAX_TOP_NEWS]);
+
+    // Keep newest MAX_OTHER_NEWS as Other News, demote the rest to Vertical News
+    db.run(`
+      UPDATE news SET newsType = 'Vertical News'
+      WHERE newsType = 'Other News'
+        AND id NOT IN (
+          SELECT id FROM news WHERE newsType = 'Other News' ORDER BY id DESC LIMIT ?
+        )
+    `, [MAX_OTHER_NEWS], cb);
+  });
+}
+
 // Create News
 app.post('/api/news', authenticateToken, (req, res) => {
   if (!req.user || !req.user.isAdmin) {
@@ -366,7 +400,8 @@ app.post('/api/news', authenticateToken, (req, res) => {
         console.error('Error creating news:', err);
         return res.status(500).json({ error: 'Database error while creating news' });
       }
-      res.status(201).json({ message: 'News created successfully', id: this.lastID });
+      const newId = this.lastID;
+      cascadeDemotion(() => res.status(201).json({ message: 'News created successfully', id: newId }));
     }
   );
 });
@@ -408,7 +443,7 @@ app.put('/api/news/:id', authenticateToken, (req, res) => {
         console.error('Error updating news:', err);
         return res.status(500).json({ error: 'Database error while updating news' });
       }
-      res.json({ message: 'News updated successfully' });
+      cascadeDemotion(() => res.json({ message: 'News updated successfully' }));
     }
   );
 });
